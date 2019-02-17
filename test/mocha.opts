@@ -1,0 +1,5 @@
+--require @babel/polyfill
+--require @babel/register
+--require test/bootstrap.js
+test/**/*.test.js
+--exit

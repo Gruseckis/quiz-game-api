@@ -3,6 +3,7 @@ import './utils/dotenv';
 import cors from 'cors';
 import defaultErrorHandler from './middlewares/defaultErrorHandler';
 import bodyParser from 'body-parser';
+import index from './routes/index';
 
 const app = express();
 const logger = require('./utils/logger')('server');
@@ -13,9 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
 
-app.use(`/api/v${process.env.API_VERSION}`, (req, res) => {
-  res.status(200).send({ message: 'Quiz-game API' });
-});
+app.use(`/api/v${process.env.API_VERSION}`, index);
 
 app.use('/uploads', express.static('uploads'));
 app.use(defaultErrorHandler);
