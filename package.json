@@ -1,0 +1,28 @@
+{
+  "name": "quiz-game-api",
+  "version": "1.0.0",
+  "description": "API for Quiz Game API",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node ./server.js",
+    "start": "babel-node ./server.js",
+    "test": "mocha"
+  },
+  "author": "Germans Gruseckis <g.gruseckis@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.1.6",
+    "@babel/node": "^7.2.2",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/register": "^7.0.0",
+    "nodemon": "^1.18.10"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "winston": "^3.2.1"
+  }
+}
