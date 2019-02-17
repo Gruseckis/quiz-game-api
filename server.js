@@ -1,15 +1,17 @@
 import express from 'express';
 import './utils/dotenv';
+import cors from 'cors';
 import defaultErrorHandler from './middlewares/defaultErrorHandler';
 import bodyParser from 'body-parser';
 
 const app = express();
 const logger = require('./utils/logger')('server');
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use;
+// Routing
 
 app.use(`/api/v${process.env.API_VERSION}`, (req, res) => {
   res.status(200).send({ message: 'Quiz-game API' });
