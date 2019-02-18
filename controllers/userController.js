@@ -1,5 +1,5 @@
 
-import * as UserModel from "../models/userModel";
+import {getUsers, updateUser, deleteUser} from "../models/userModel";
 import AppError from "../errors/AppError";
 
 const logger = require('../utils/logger')('logController');
@@ -9,21 +9,14 @@ const getUserInfo = async (req, res) => {
   const { user } = req;
   res.status(200).send({
     payload: {
-      username: user.username,
-      email: user.email,
-      hashedPassword: user.hashedPassword,
-      name: user.name,
-      surname: user.surname,
-      dateOfBirth: user.dateOfBirth,
-      level: user.level,
-      id: user._id
+      user
     },
   });
 };
 
-const getUsers = async (req,res, next) => {
+const getAllUsers = async (req,res, next) => {
   try {
-    const users = await UserModel.getUsers();
+    const users = await getUsers();
     res.status(200).send({
       payload: users,
     });
@@ -32,12 +25,12 @@ const getUsers = async (req,res, next) => {
   }
 }
 
-const updateUser = async (req, res, next) => {
+const updateOneUser = async (req, res, next) => {
   try {
     const id = req.params.userId;
 
     const body = {...req.body}; 
-    const updatedUser = await UserModel.updateUser(id, body);
+    const updatedUser = await updateUser(id, body);
     if(updatedUser){
     res.status(200).send({
       payload: updatedUser
@@ -50,10 +43,10 @@ const updateUser = async (req, res, next) => {
   }
 }
 
-const deleteUser = async (req,res,next) => {
+const deleteOneUser = async (req,res,next) => {
   try {
     const id = req.params.userId;
-    const deletedUser = await UserModel.deleteUser(id);
+    const deletedUser = await deleteUser(id);
     if(deletedUser){
       res.status(200).send({
         payload: {
@@ -68,4 +61,4 @@ const deleteUser = async (req,res,next) => {
   }
 }
 
-export { getUserInfo, getUsers, updateUser, deleteUser };
+export { getUserInfo, getAllUsers, updateOneUser, deleteOneUser };

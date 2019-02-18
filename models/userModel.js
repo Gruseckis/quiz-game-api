@@ -9,12 +9,11 @@ const userSchema = new mongoose.Schema(
   name: {type: String, trim: true, required: true},
   surname: {type: String, trim: true, required: true},
   dateOfBirth: {type: Date, trim: true, required: true},
-  level: {type: String, trim: true, required: true}
+  level: {type: String, trim: true, required: true, enum :['user','quizer','moderator','admin']}
 },
 {
   timestamp: true
 });
-
 
 userSchema.pre('save', async function callback(next){
   if(this.hashedPassword){
@@ -29,20 +28,14 @@ userSchema.pre('save', async function callback(next){
 const UserModel = mongoose.model('User',userSchema);
 
 const save = async model => new UserModel(model).save();
-
-const getUserByName = async username => UserModel.findOne({username});
+const getUserByUsername = async username => UserModel.findOne({username});
 const getUsers = async () => UserModel.find();
 const updateUser = async(id,model) => UserModel.findByIdAndUpdate(id, model, {new: true});
 const deleteUser = async(id) =>  UserModel.findByIdAndRemove(id);
-
-
-
 const comparePassword = async ({userPassword, hashedPassword}) => bcrypt.compare(userPassword, hashedPassword);
-
 
 UserModel.schema
   .path('username')
   .validate(async username => !(await getUserByName(username)), 'User already exists!');
 
-
-export { save, getUserByName, comparePassword, userSchema, getUsers, UserModel, updateUser, deleteUser };
+export { save, getUserByUsername, comparePassword, userSchema, getUsers, UserModel, updateUser, deleteUser };
