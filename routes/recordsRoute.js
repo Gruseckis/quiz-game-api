@@ -5,14 +5,15 @@ import {
   getAllRecord,
   addRecords,
   deleteRecords,
-  patchRecords
+  updateRecords
 } from "../controllers/recordsController";
 
 const router = express.Router();
 //this routes has been created
-router.get("/", getAllRecord);
 router.post("/", addRecords);
-router.delete("/", deleteRecords);
-router.patch("/", patchRecords);
+router.get("/", getAllRecord);
+router.get("/:recordId", getRecordsById);
+router.delete("/:recordId", deleteRecords);
+router.patch("/:recordId", updateRecords);
 
 export default router;
