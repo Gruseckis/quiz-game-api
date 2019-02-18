@@ -41,6 +41,10 @@ const updateQuiz = async (req, res, next) => {
 
 const deleteQuiz = async (req, res, next) => {
   try {
+    const quiz = await QuizModel.getQuizById(req.params.quizId);
+    if (!quiz) {
+      throw new AppError('Cannot delete quiz which does not exist');
+    }
     await QuizModel.deleteQuizById(req.params.quizId);
     res.status(200).send({
       payload: {
@@ -48,7 +52,7 @@ const deleteQuiz = async (req, res, next) => {
       }
     });
   } catch (error) {
-    next(new AppError(error.message));
+    next(error instanceof AppError ? error : new AppError(error.message));
   }
 }
 
