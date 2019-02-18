@@ -4,6 +4,7 @@ const quizSchema = new mongoose.Schema(
   {
     ownerId: { type: String, unique: false, required: true },
     name: { type: String, unique: true, required: true },
+    description: { type: String, unique: false, required: false },
     questions: [{ type: String, unique: false, required: false }]
   },
   { timestamps: true }
@@ -19,8 +20,8 @@ const getQuizById = async _id => QuizModel.findOne({ _id });
 
 const getQuizzesByOwnerId = async ownerId => QuizModel.find({ ownerId });
 
-const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, model);
+const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, model, { new: true });
 
-const deleteQuizById = async _id => QuizModel.deleteOne({ _id });
+const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 
-export { save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
+export { quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
