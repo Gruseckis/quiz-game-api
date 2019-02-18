@@ -2,11 +2,23 @@ import express from 'express';
 import './utils/dotenv';
 import cors from 'cors';
 import defaultErrorHandler from './middlewares/defaultErrorHandler';
+import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
 
 const app = express();
 const logger = require('./utils/logger')('server');
+
+mongoose.Promise = global.Promise; // Use native promises - http://mongoosejs.com/docs/promises.html
+mongoose.connect(process.env.MONGODB_URI, {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+});
+mongoose.connection.on('error', error => {
+  logger.log('error', 'MongoDB connection error. Please make sure MongoDB is running.');
+  process.exit();
+});
+mongoose.connection.once('open', () => logger.log('info', 'MongoDB has been connected.'));
 
 app.use(cors());
 app.use(bodyParser.json());
