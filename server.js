@@ -8,7 +8,6 @@ import index from './routes/index';
 import authRouter from './routes/auth';
 import authenticate from './middlewares/authenticate'
 
-
 const app = express();
 const logger = require('./utils/logger')('server');
 
@@ -30,7 +29,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routing
 //from Kristina, use authenticate method to add authentication to your route.
 app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
-
 
 app.use(`/api/v${process.env.API_VERSION}`, index);
 

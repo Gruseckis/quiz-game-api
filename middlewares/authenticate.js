@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
 import AuthError from '../errors/AuthError'
+import * as UserModel from '../models/UserModel';
+
 const logger = require('../utils/logger')('authenticate')
 
 
@@ -11,9 +13,7 @@ const jwtVerify = token =>
     });
 
 const authenticate = async (req, res, next) => {
-    if (process.env.SKIP_AUTH) {
-        return next();
-    }
+
     const { authorization } = req.headers;
     let token;
     if (authorization) {
