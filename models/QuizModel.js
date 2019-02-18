@@ -21,6 +21,6 @@ const getQuizzesByOwnerId = async ownerId => QuizModel.find({ ownerId });
 
 const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, model);
 
-const deleteQuizById = async _id => QuizModel.deleteOne({ _id });
+const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 
-export { save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
+export { quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
