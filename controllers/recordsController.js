@@ -1,5 +1,4 @@
 import AppError from "../errors/AppError";
-
 import {
   save,
   getRecordById,
