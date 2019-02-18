@@ -9,7 +9,7 @@ import {
 } from "../controllers/recordsController";
 
 const router = express.Router();
-
+//this routes has been created
 router.get("/", getAllRecord);
 router.post("/", addRecords);
 router.delete("/", deleteRecords);
