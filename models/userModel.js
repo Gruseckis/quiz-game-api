@@ -32,7 +32,12 @@ const save = async model => new UserModel(model).save();
 
 const getUserByName = async username => UserModel.findOne({username});
 const getUsers = async () => UserModel.find();
-const comparePassword = async (userPassword, hashedPassword) => bcrypt.compare(userPassword, hashedPassword);
+const updateUser = async(id,model) => UserModel.findByIdAndUpdate(id, model, {new: true});
+const deleteUser = async(id) =>  UserModel.findByIdAndRemove(id);
+
+
+
+const comparePassword = async ({userPassword, hashedPassword}) => bcrypt.compare(userPassword, hashedPassword);
 
 
 UserModel.schema
@@ -40,4 +45,4 @@ UserModel.schema
   .validate(async username => !(await getUserByName(username)), 'User already exists!');
 
 
-export { save, getUserByName, comparePassword, userSchema, getUsers, UserModel };
+export { save, getUserByName, comparePassword, userSchema, getUsers, UserModel, updateUser, deleteUser };
