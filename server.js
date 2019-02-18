@@ -5,6 +5,7 @@ import defaultErrorHandler from './middlewares/defaultErrorHandler';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
+import quiz from './routes/quiz';
 
 const app = express();
 const logger = require('./utils/logger')('server');
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
 
+app.use(`/api/v${process.env.API_VERSION}/quizzes`, quiz);
 app.use(`/api/v${process.env.API_VERSION}`, index);
 
 app.use('/uploads', express.static('uploads'));
