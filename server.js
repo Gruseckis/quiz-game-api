@@ -5,7 +5,7 @@ import defaultErrorHandler from './middlewares/defaultErrorHandler';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
-import authRouter from './routes/auth';
+import authRouter from './routes/authRouter';
 import authenticate from './middlewares/authenticate'
 
 const app = express();
@@ -27,7 +27,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
-//from Kristina, use authenticate method to add authentication to your route.
 app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
 
 app.use(`/api/v${process.env.API_VERSION}`, index);
