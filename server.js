@@ -5,7 +5,7 @@ import defaultErrorHandler from './middlewares/defaultErrorHandler';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
-import quizRoutes from './routes/quiz';
+import quizRoutes from './routes/quizRouter';
 
 const app = express();
 const logger = require('./utils/logger')('server');
