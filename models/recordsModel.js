@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 const recordSchema = new mongoose.Schema(
   {
     questionId: { type: String, required: true, unique: false },
-    answers: [{ type: Number, required: true }]
+    answers: [{ type: String, required: true }]
   },
   { timestamps: true }
 );
