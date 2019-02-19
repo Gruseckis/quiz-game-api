@@ -32,7 +32,7 @@ const addRecord = async (req, res, next) => {
   try {
     const record = await save({
       questionId: req.body.questionId,
-      answers: req.body.answersId
+      answers: req.body.answers
     });
     res.status(201).send({ message: 'Record was created' });
   } catch (error) {

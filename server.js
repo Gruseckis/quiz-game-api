@@ -28,22 +28,6 @@ mongoose.connection.once('open', () =>
   logger.log('info', 'MongoDB has been connected.')
 );
 
-mongoose.Promise = global.Promise; // Use native promises - http://mongoosejs.com/docs/promises.html
-mongoose.connect(process.env.MONGODB_URI, {
-  useCreateIndex: true,
-  useNewUrlParser: true
-});
-mongoose.connection.on('error', error => {
-  logger.log(
-    'error',
-    'MongoDB connection error. Please make sure MongoDB is running.'
-  );
-  process.exit();
-});
-mongoose.connection.once('open', () =>
-  logger.log('info', 'MongoDB has been connected.')
-);
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
