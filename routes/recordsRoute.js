@@ -1,19 +1,18 @@
-import express from "express";
+import express from 'express';
 
 import {
-  getRecordsById,
+  getRecordById,
   getAllRecord,
-  addRecords,
+  addRecord,
   deleteRecords,
   updateRecords
-} from "../controllers/recordsController";
+} from '../controllers/recordsController';
 
 const router = express.Router();
-//this routes has been created
-router.post("/", addRecords);
-router.get("/", getAllRecord);
-router.get("/:recordId", getRecordsById);
-router.delete("/:recordId", deleteRecords);
-router.patch("/:recordId", updateRecords);
+router.post('/', addRecord);
+router.get('/', getAllRecord);
+router.get('/:recordId', getRecordById);
+router.delete('/:recordId', deleteRecords);
+router.patch('/:recordId', updateRecords);
 
 export default router;
