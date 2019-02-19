@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
 import quizRoutes from './routes/quizRouter';
+import authRouter from './routes/authRouter';
 
 const app = express();
 const logger = require('./utils/logger')('server');
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
+app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
 
 app.use(`/api/v${process.env.API_VERSION}/quizzes`, quizRoutes);
 app.use(`/api/v${process.env.API_VERSION}`, index);
