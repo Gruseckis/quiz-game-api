@@ -6,7 +6,7 @@ import {
   deleteRecordById,
   getAllRecords
 } from '../models/recordsModel';
-const getAllRecord = async (req, res) => {
+const getAllRecords = async (req, res) => {
   try {
     const record = await getAllRecords();
     res.status(200).send({ payload: record });
@@ -15,7 +15,7 @@ const getAllRecord = async (req, res) => {
   }
 };
 
-const getRecordUsingID = async (req, res, next) => {
+const getRecordById = async (req, res, next) => {
   try {
     const record = await getRecordById(req.params.recordId);
     if (record) {
@@ -65,8 +65,8 @@ const deleteRecords = async (req, res, next) => {
 };
 
 export {
-  getRecordUsingID,
-  getAllRecord,
+  getRecordById,
+  getAllRecords,
   addRecord,
   deleteRecords,
   updateRecords

@@ -2,7 +2,7 @@ import express from 'express';
 
 import {
   getRecordById,
-  getAllRecord,
+  getAllRecords,
   addRecord,
   deleteRecords,
   updateRecords
@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 router.post('/', addRecord);
-router.get('/', getAllRecord);
+router.get('/', getAllRecords);
 router.get('/:recordId', getRecordById);
 router.delete('/:recordId', deleteRecords);
 router.patch('/:recordId', updateRecords);
