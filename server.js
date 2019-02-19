@@ -23,13 +23,10 @@ mongoose.connection.once('open', () => logger.log('info', 'MongoDB has been conn
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 // Routing
-
 app.use(`/api/v${process.env.API_VERSION}/questions`, questionRouter);
-
 app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
-
-
 app.use(`/api/v${process.env.API_VERSION}`, index);
 app.use('/uploads', express.static('uploads'));
 app.use(defaultErrorHandler);

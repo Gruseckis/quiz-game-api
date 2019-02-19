@@ -43,7 +43,6 @@ const updateQuestionById = async(req, res, next) => {
    };
 };
 
-
 const deleteQuestionbyID = async(req, res, next) => {
    try {
       const question = await deleteQuestionByID(req.params.questionId);
@@ -54,4 +53,4 @@ const deleteQuestionbyID = async(req, res, next) => {
    };
 };
 
-export { addNewQuestion, getALLquestions, getQuestionById, updateQuestionById, deleteQuestionbyID};
+export { addNewQuestion, getALLquestions, getQuestionById, updateQuestionById, deleteQuestionbyID };
