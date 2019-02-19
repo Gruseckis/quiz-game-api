@@ -2,18 +2,9 @@ import mongoose from 'mongoose';
 
 const resultSchema = new mongoose.Schema({
 
-    recordIds: {
-        recordId: { type: Array, unique: true, required: true },
-        path: { type: String, unique: true, required: true },
-    },
-    userId: {
-        userId: { type: String, unique: true, required: true },
-        path: { type: String, unique: true, required: true },
-    },
-    quizId: {
-        quizId: { type: String, unique: true, required: true },
-        path: { type: String, unique: true, required: true },
-    },
+    recordId: { type: Array, unique: true, required: true },
+    userId: { type: String, unique: true, required: true },
+    quizId: { type: String, unique: true, required: true },
 },
     { timestamps: true },
 );
