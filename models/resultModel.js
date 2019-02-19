@@ -21,7 +21,7 @@ const getResultById = async _id => ResultModel.findById(_id);
 
 const getAllResultsByUserId = async userId => ResultModel.find(userId);
 
-const getAllresultsByQuizId = async quizId => ResultModel.findOne(quizId);
+const getAllresultsByQuizId = async quizId => ResultModel.find(quizId);
 
 const findByIdAndUpdate = async (id, model) => ResultModel.findByIdAndUpdate(id, model, { new: true });
 
