@@ -15,7 +15,8 @@ const register = async (req, res, next) => {
             hashedPassword: body.hashedPassword,
             name: body.name,
             surname: body.surname,
-            dateOfBirth: body.dateOfBirth
+            dateOfBirth: body.dateOfBirth,
+            level: '',
         });
         logger.log('info', `Successfully registered: ${body.username}`);
         res.status(200).send({ payload: { user: user } });
