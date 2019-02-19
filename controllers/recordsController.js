@@ -39,7 +39,7 @@ const addRecord = async (req, res, next) => {
   }
 };
 
-const updateRecords = async (req, res, next) => {
+const updateRecord = async (req, res, next) => {
   try {
     const record = await updateById(req.params.recordId, { ...req.body });
     if (!record) {
@@ -63,4 +63,4 @@ const deleteRecord = async (req, res, next) => {
   }
 };
 
-export { getRecordById, getAllRecords, addRecord, deleteRecord, updateRecords };
+export { getRecordById, getAllRecords, addRecord, deleteRecord, updateRecord };
