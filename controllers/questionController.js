@@ -1,7 +1,6 @@
 import {save, getAllQuestions, getQuestionByID, updateQuestionByID, deleteQuestionByID} from '../models/questionModel';
 import AppError from '../errors/AppError';
 
-
 const addNewQuestion = async(req, res, next) => {
    try {
       const question = await save({
@@ -46,8 +45,10 @@ const updateQuestionById = async(req, res, next) => {
 const deleteQuestionbyID = async(req, res, next) => {
    try {
       const question = await deleteQuestionByID(req.params.questionId);
-      if (question) { res.status(200).send({message: `Question was successfully deleted`}); }
-         else {throw new AppError("This questionId doesn't exist")}
+      if (question) 
+         { res.status(200).send({message: `Question was successfully deleted`}); }
+      else 
+         {throw new AppError("This questionId doesn't exist")}
    } catch(error) {
       next(new AppError(error.message ))
    };
