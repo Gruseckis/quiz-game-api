@@ -5,7 +5,7 @@ const questionSchema = new mongoose.Schema(
       "question": { type: String, required: true },
       "correct": [ {type: String, required: true } ], // array of correct answer ID's 
       "answers": [ {type: String, required: true } ], // array of possible answers as strings
-      "type": { type: String, required: true, enum: ['input', 'checkout', 'radio', 'textbox']}
+      "type": { type: String, required: true, enum: [ 'input', 'checkout', 'radio', 'textbox' ]}
    },
    { timestamps: true },
 );
