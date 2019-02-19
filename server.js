@@ -6,7 +6,6 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
 import authRouter from './routes/authRouter';
-import authenticate from './middlewares/authenticate'
 
 const app = express();
 const logger = require('./utils/logger')('server');
