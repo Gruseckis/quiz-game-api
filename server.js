@@ -4,7 +4,7 @@ import cors from 'cors';
 import defaultErrorHandler from './middlewares/defaultErrorHandler';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import result from './routes/result';
+import resultsRoute from './routes/resultsRoutes';
 import index from './routes/index';
 
 const app = express();
@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
 
-app.use(`/api/v${process.env.API_VERSION}/results`, result);
+app.use(`/api/v${process.env.API_VERSION}/results`, resultsRoute);
 app.use(`/api/v${process.env.API_VERSION}`, index);
 
 app.use('/uploads', express.static('uploads'));

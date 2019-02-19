@@ -54,7 +54,7 @@ const findByIdAndUpdate = async (req, res, next) => {
 
     try {
         const id = req.params.resultId
-        const model = { ...req.body }
+        const model = { ...req }
         const updatedResults = await ResultModel.findByIdAndUpdate(id, model)
         res.status(200).send({ payload: { updatedResults } })
     }
