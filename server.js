@@ -32,10 +32,6 @@ mongoose.connection.once('open', () =>
   logger.log('info', 'MongoDB has been connected.')
 );
 
-mongoose.connection.once('open', () =>
-  logger.log('info', 'MongoDB has been connected.')
-);
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
