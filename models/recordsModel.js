@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const recordSchema = new mongoose.Schema(
   {
     questionId: { type: String, required: true, unique: false },
@@ -7,7 +7,7 @@ const recordSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const RecordModel = mongoose.model("Record", recordSchema);
+const RecordModel = mongoose.model('Record', recordSchema);
 
 const save = async model => new RecordModel(model).save();
 const getAllRecords = async () => RecordModel.find();
@@ -19,11 +19,8 @@ const updateById = async (recordId, update) =>
 const deleteRecordById = async recordId =>
   RecordModel.findByIdAndDelete(recordId);
 
-const getRecordsFromIdArray = async _id => {
-  RecordModel.find({ _id: mongoose.Types.ObjectId(_id), status: "Active" })
-    .where("category")
-    .in(arr)
-    .exec();
+const getRecordsFromIdArray = async arrId => {
+  RecordModel.find({ _id: { $in: [arrId] } });
 };
 
 export {
