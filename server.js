@@ -9,6 +9,7 @@ import recordsRouter from './routes/recordsRoute';
 import usersRoutes from './routes/usersRoutes';
 import quizRoutes from './routes/quizRouter';
 import authRouter from './routes/authRouter';
+import authenticate from './middlewares/authenticate'
 
 const app = express();
 const logger = require('./utils/logger')('server');
@@ -53,6 +54,8 @@ app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
 app.use(`/api/v${process.env.API_VERSION}/records`, recordsRouter);
 app.use(`/api/v${process.env.API_VERSION}/users`, usersRoutes);
 app.use(`/api/v${process.env.API_VERSION}/quizzes`, quizRoutes);
+app.use(`/api/v${process.env.API_VERSION}/users`, authenticate, usersRoutes);
+app.use(`/api/v${process.env.API_VERSION}/quizzes`, authenticate, quizRoutes);
 app.use(`/api/v${process.env.API_VERSION}`, index);
 
 app.use('/uploads', express.static('uploads'));
