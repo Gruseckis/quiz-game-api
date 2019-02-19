@@ -27,7 +27,6 @@ const getRecordById = async (req, res, next) => {
     next(new AppError(error.message));
   }
 };
-
 const addRecord = async (req, res, next) => {
   try {
     const record = await save({
