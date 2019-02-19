@@ -26,7 +26,7 @@ const authenticate = async (req, res, next) => {
             const { username } = decodedToken.data;
             const user = await getUserByUsername(username);
             if (user) {
-                logger.log('info', `User: ${username} was successfully authenticated`);
+                logger.log('debug', `User: ${username} was successfully authenticated`);
                 req.user = user;
                 return next();
             }
