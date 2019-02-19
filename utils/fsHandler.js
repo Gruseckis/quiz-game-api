@@ -2,7 +2,7 @@ import fs from 'fs';
 
 const createFolderIfNotExists = path => {
   return new Promise((resolve, reject) => {
-    fs.mkdir(path, err => {
+    fs.mkdir(path, { recursive: true }, err => {
       if (err) {
         if (err.code === 'EEXIST') {
           resolve();
