@@ -34,7 +34,9 @@ const getAllresultsByQuizId = async quizId => ResultModel.findOne({ quizId });
 
 const updateResultById = async _id => ResultModel.findById({ _id });
 
-const deleteResultById = async _id => ResultModel.deleteResultById({ _id });
+const findByIdAndUpdate = async (id, model) => ResultModel.findByIdAndUpdate(id, model, { new: true });
+
+const deleteResultById = async _id => ResultModel.findByIdAndRemove(_id);
 
 
-export { save, getAllResults, getResultById, getAllResultsByUserId, getAllresultsByQuizId, updateResultById, deleteResultById, ResultModel, resultSchema };
+export { save, getAllResults, getResultById, getAllResultsByUserId, getAllresultsByQuizId, updateResultById, deleteResultById, ResultModel, resultSchema, findByIdAndUpdate };
