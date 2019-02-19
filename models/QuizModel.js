@@ -20,7 +20,7 @@ const getQuizById = async _id => QuizModel.findOne({ _id });
 
 const getQuizzesByOwnerId = async ownerId => QuizModel.find({ ownerId });
 
-const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, model);
+const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, model, { new: true });
 
 const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 

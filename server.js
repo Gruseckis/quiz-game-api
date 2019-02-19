@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
 import recordsRouter from './routes/recordsRoute';
-
+import quizRoutes from './routes/quizRouter';
 import authRouter from './routes/authRouter';
 
 
@@ -46,8 +46,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
 app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
-
 app.use(`/api/v${process.env.API_VERSION}/records`, recordsRouter);
+app.use(`/api/v${process.env.API_VERSION}/quizzes`, quizRoutes);
 app.use(`/api/v${process.env.API_VERSION}`, index);
 
 app.use("/uploads", express.static("uploads"));
