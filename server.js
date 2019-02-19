@@ -5,6 +5,7 @@ import defaultErrorHandler from './middlewares/defaultErrorHandler';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
+import authRouter from './routes/authRouter';
 
 const app = express();
 const logger = require('./utils/logger')('server');
@@ -25,6 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
+app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
 
 app.use(`/api/v${process.env.API_VERSION}`, index);
 
