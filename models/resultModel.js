@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const resultSchema = new mongoose.Schema({
 
-    recordId: [{ type: String, unique: true, required: true }],
+    recordIds: [{ type: String, unique: true, required: true }],
     userId: { type: String, unique: true, required: true },
     quizId: { type: String, unique: true, required: true },
 },
