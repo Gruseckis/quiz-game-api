@@ -6,8 +6,6 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import index from './routes/index';
 
-
-
 const app = express();
 const logger = require('./utils/logger')('server');
 
