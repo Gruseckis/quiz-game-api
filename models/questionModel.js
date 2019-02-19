@@ -9,7 +9,6 @@ const questionSchema = new mongoose.Schema(
    },
    { timestamps: true },
 );
-
 const QuestionModel = mongoose.model('Question', questionSchema);
 
 // save your question to DB
