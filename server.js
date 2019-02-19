@@ -34,7 +34,6 @@ app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
 app.use(`/api/v${process.env.API_VERSION}/users`, authenticate, usersRoutes);
 app.use(`/api/v${process.env.API_VERSION}/quizzes`, authenticate, quizRoutes);
 app.use(`/api/v${process.env.API_VERSION}`, index);
-
 app.use('/uploads', express.static('uploads'));
 app.use(defaultErrorHandler);
 
