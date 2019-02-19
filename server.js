@@ -4,6 +4,7 @@ import cors from 'cors';
 import defaultErrorHandler from './middlewares/defaultErrorHandler';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import resultsRoute from './routes/resultsRoutes';
 import index from './routes/index';
 
 import questionRouter from './routes/questionRoutes';
@@ -33,9 +34,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routing
 app.use(`/api/v${process.env.API_VERSION}/questions`, questionRouter);
 app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
-
+app.use(`/api/v${process.env.API_VERSION}/results`, resultsRoute);
+app.use(`/api/v${process.env.API_VERSION}`, index);
 app.use(`/api/v${process.env.API_VERSION}/users`, authenticate, usersRoutes);
 app.use(`/api/v${process.env.API_VERSION}/quizzes`, authenticate, quizRoutes);
+
 
 app.use(`/api/v${process.env.API_VERSION}`, index);
 app.use('/uploads', express.static('uploads'));
