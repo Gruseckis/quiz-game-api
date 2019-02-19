@@ -7,6 +7,8 @@ import bodyParser from 'body-parser';
 import index from './routes/index';
 import recordsRouter from './routes/recordsRoute';
 
+import authRouter from './routes/authRouter';
+
 
 const app = express();
 const logger = require("./utils/logger")("server");
@@ -43,6 +45,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
+app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
 
 app.use(`/api/v${process.env.API_VERSION}/records`, recordsRouter);
 app.use(`/api/v${process.env.API_VERSION}`, index);
