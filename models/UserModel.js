@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
   name: {type: String, trim: true, required: true},
   surname: {type: String, trim: true, required: true},
   dateOfBirth: {type: Date, trim: true, required: true},
-  level: {type: String, trim: true, required: true, enum :['user','quizer','moderator','admin']}
+  level: {type: String, trim: true, required: true, enum :['user', 'quizer', 'moderator', 'admin'], default: 'user'}
 },
 {
   timestamp: true
