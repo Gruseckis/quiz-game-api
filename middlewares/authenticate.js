@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import AuthError from '../errors/AuthError'
-import * as UserModel from '../models/UserModel';
+import { getUserByUsername } from '../models/UserModel';
 
 const logger = require('../utils/logger')('authenticate')
 
@@ -24,7 +24,7 @@ const authenticate = async (req, res, next) => {
 
         if (decodedToken && decodedToken.data && decodedToken.data.username) {
             const { username } = decodedToken.data;
-            const user = await getUserByName(username);
+            const user = await getUserByUsername(username);
             if (user) {
                 logger.log('debug', `User: ${username} was successfully authenticated`);
                 req.user = user;
