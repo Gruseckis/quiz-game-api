@@ -51,7 +51,7 @@ const updateRecords = async (req, res, next) => {
   }
 };
 
-const deleteRecords = async (req, res, next) => {
+const deleteRecord = async (req, res, next) => {
   try {
     const remove = await deleteRecordById(req.params.recordId);
     if (!remove) {
@@ -63,10 +63,4 @@ const deleteRecords = async (req, res, next) => {
   }
 };
 
-export {
-  getRecordById,
-  getAllRecords,
-  addRecord,
-  deleteRecords,
-  updateRecords
-};
+export { getRecordById, getAllRecords, addRecord, deleteRecord, updateRecords };
