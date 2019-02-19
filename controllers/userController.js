@@ -14,7 +14,7 @@ const getUserInfo = async (req, res) => {
   });
 };
 
-const getAllUsers = async (req,res, next) => {
+const getAllUsers = async (req, res, next) => {
   try {
     const users = await getUsers();
     res.status(200).send({
@@ -43,7 +43,7 @@ const updateOneUser = async (req, res, next) => {
   }
 }
 
-const deleteOneUser = async (req,res,next) => {
+const deleteOneUser = async (req, res, next) => {
   try {
     const id = req.params.userId;
     const deletedUser = await deleteUser(id);
