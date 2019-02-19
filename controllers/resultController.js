@@ -45,7 +45,23 @@ const addResults = async (req, res, next) => {
 
 const deleteResultById = async (req, res, next) => {
     try {
-        res.send({ payload: { params: req.params } })
+        const id = req.params.resultId
+        const deletedResult = await ResultModel.deleteResultById(id)
+        res.status(200).send({ payload: 'Result is deleted' })
+    }
+    catch (error) {
+        next(new AppError(error.message));
+    }
+};
+
+
+const findByIdAndUpdate = async (req, res, next) => {
+
+    try {
+        const id = req.params.resultId
+        const model = { ...req.body }
+        const updatedResults = await ResultModel.findByIdAndUpdate(id, model)
+        res.status(200).send({ payload: { updatedResults } })
     }
     catch (error) {
         next(new AppError(error.message));
@@ -56,4 +72,4 @@ const deleteResultById = async (req, res, next) => {
 
 
 
-export { getAllResults, getResultById, addResults, deleteResultById }
+export { getAllResults, getResultById, addResults, deleteResultById, findByIdAndUpdate }
