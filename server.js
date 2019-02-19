@@ -26,10 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routing
 
-
 app.use(`/api/v${process.env.API_VERSION}`, index);
-
-
 app.use('/uploads', express.static('uploads'));
 app.use(defaultErrorHandler);
 
