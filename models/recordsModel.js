@@ -19,8 +19,8 @@ const updateById = async (recordId, update) =>
 const deleteRecordById = async recordId =>
   RecordModel.findByIdAndDelete(recordId);
 
-const getRecordsFromIdArray = async arrId => {
-  RecordModel.find({ _id: { $in: [arrId] } });
+const getRecordsFromIdArray = async arrayId => {
+  RecordModel.find({ _id: { $in: [arrayId] } });
 };
 
 export {
