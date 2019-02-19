@@ -15,11 +15,10 @@ const register = async (req, res, next) => {
             hashedPassword: body.hashedPassword,
             name: body.name,
             surname: body.surname,
-            dateOfBirth: body.dateOfBirth,
-            level: '',
+            dateOfBirth: body.dateOfBirth
         });
         logger.log('info', `Successfully registered: ${body.username}`);
-        res.status(200).send({ payload: { user: user } });
+        res.status(200).send({ payload: { user } });
     } catch (error) {
         next(new AppError(error.message, 400));
     }
@@ -30,7 +29,7 @@ const login = async (req, res, next) => {
     try {
         const user = await getUserByUsername(req.body.username);
         if (!user) {
-            logger.log('debug', 'Login failed');
+            logger.log('debug', `Login failed for user: ${req.body.username}`);
             throw new AppError('Wrong user credentials!', 400);
         }
         const isPasswordsEqual = await comparePassword({
@@ -51,7 +50,7 @@ const login = async (req, res, next) => {
             logger.log('info', `Successfully loged in: ${user.username}`);
             res.status(200).send({ payload: { message: 'Successfully loged in', token } });
         } else {
-            throw new AppError('CHECK TOKEN PART', 400);
+            throw new AppError('Wrong user credentials!', 400);
         }
     } catch (error) {
         next(error instanceof AppError ? error : new AppError('Wrong user credentials!', 400));
