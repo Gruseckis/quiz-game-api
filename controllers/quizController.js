@@ -32,7 +32,8 @@ const addQuiz = async (req, res, next) => {
 const updateQuiz = async (req, res, next) => {
   try {
     const body = { ...req.body };
-    if(await isOwner(req.params.quizId, req.user._id) || accessLevelCheck(req.user.level,'moderator')){
+    const checkIfOwner = await isOwner(req.params.quizId, req.user._id);
+    if(checkIfOwner || accessLevelCheck(req.user.level,'moderator')){
       const updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, body);
       if(!updatedQuiz){
         throw new AppError("Quiz not found");
@@ -50,7 +51,8 @@ const updateQuiz = async (req, res, next) => {
 
 const deleteQuiz = async (req, res, next) => {
   try {
-    if(await isOwner(req.params.quizId, req.user._id) || accessLevelCheck(req.user.level,'moderator')){
+    const checkIfOwner = await isOwner(req.params.quizId, req.user._id);
+    if( checkIfOwner || accessLevelCheck(req.user.level,'moderator')){
       const result = await QuizModel.deleteQuizById(req.params.quizId);
       if (!result) {
         throw new AppError('Cannot delete quiz which does not exist');
