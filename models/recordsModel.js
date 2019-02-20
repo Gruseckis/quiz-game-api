@@ -10,8 +10,8 @@ const recordSchema = new mongoose.Schema(
 const RecordModel = mongoose.model('Record', recordSchema);
 
 const save = async model => new RecordModel(model).save();
-const getRecords = async () => RecordModel.find();
-const getRecordUsingId = async _id => RecordModel.findById(_id);
+const getAllRecords = async () => RecordModel.find();
+const getRecordById = async _id => RecordModel.findById(_id);
 
 const updateById = async (recordId, update) =>
   RecordModel.findByIdAndUpdate(recordId, update, { new: true });
@@ -27,9 +27,9 @@ export {
   RecordModel,
   recordSchema,
   save,
-  getRecordUsingId,
+  getRecordById,
   updateById,
   deleteRecordById,
-  getRecords,
+  getAllRecords,
   getRecordsFromIdArray
 };
