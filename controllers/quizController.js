@@ -31,7 +31,6 @@ const addQuiz = async (req, res, next) => {
 const updateQuiz = async (req, res, next) => {
   try {
     const body = { ...req.body };
-    // const keys = Object.keys(body);
     const keysLength = Object.keys(body).length;
     let updatedQuiz = {};
 
