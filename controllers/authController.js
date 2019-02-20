@@ -48,7 +48,6 @@ const login = async (req, res, next) => {
                         level: user.level,
                         createdAt: user.createdAt,
                         updatedAt: user.updatedAt,
-
                     },
                 },
                 process.env.JWT_SECRET,
