@@ -69,14 +69,4 @@ const deleteOneUser = async (req, res, next) => {
   }
 }
 
-const isOwner = async(userId, userIdFromParams) => {
-  const user = await getUserById(userId);
-  const id = user._id;
-  if(id == userIdFromParams){
-    return true
-  } else {
-    return false
-  }
-}
-
 export { getUserInfo, getAllUsers, updateOneUser, deleteOneUser };

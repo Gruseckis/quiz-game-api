@@ -75,7 +75,7 @@ const isOwner = async(quizId, userId) => {
       throw new AppError('Quiz not found');
     }
     const ownerId = quiz.ownerId;
-    if(userId == ownerId){
+    if(userId.toString() === ownerId.toString()){
       return true
     } else {
       return false
