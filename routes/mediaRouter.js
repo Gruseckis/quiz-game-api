@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get('/:mediaId', mediaController.getMediaById);
 router.post('', diskStorageSingle, mediaController.addMedia);
+router.delete('/:mediaId', mediaController.deleteMediaById);
 
 export default router;
