@@ -1,5 +1,5 @@
 
-import {getUsers, updateUser, deleteUser} from "../models/userModel";
+import {getUsers, updateUser, deleteUser} from "../models/UserModel";
 import AppError from "../errors/AppError";
 
 const logger = require('../utils/logger')('logController');
