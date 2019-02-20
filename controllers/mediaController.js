@@ -20,4 +20,13 @@ const addMedia = async (req, res, next) => {
   }
 }
 
-export { addMedia };
+const getMediaById = async (req, res, next) => {
+  try {
+    const media = await MediaModel.getMediaById(req.params.mediaId);
+    res.status(200).send({ payload: media });
+  } catch (error) {
+    next(new AppError(error.message));
+  }
+}
+
+export { addMedia, getMediaById };
