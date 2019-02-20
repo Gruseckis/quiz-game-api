@@ -3,12 +3,14 @@ import mongoose from 'mongoose';
 const quizSchema = new mongoose.Schema(
   {
     ownerId: { type: String, unique: false, required: true },
-    name: { type: String, unique: true, required: true },
+    name: { type: String, unique: false, required: true },
     description: { type: String, unique: false, required: false },
     questions: [{ type: String, unique: false, required: false }]
   },
   { timestamps: true }
 );
+
+quizSchema.index({ ownerId: 1, name: 1 }, { unique: true });
 
 const QuizModel = mongoose.model('Quiz', quizSchema);
 
