@@ -24,8 +24,7 @@ const addResults = async (req, res, next) => {
   try {
     const result = await ResultModel.save({
       quizId: req.body.quizId,
-      userId: req.body.userId,
-      recordIds: resultArray,
+      userId: req.user._id,
     });
     res.status(200).send({ payload: { result } });
   } catch (error) {
@@ -59,22 +58,4 @@ const findByIdAndUpdate = async (req, res, next) => {
   }
 };
 
-
-
-const resultArray = []
-const addRecord = async (req, res, next) => {
-  try {
-    findByIdAndUpdate(resultId, { recordIds: record._id })
-    const result = await RecordModel.save({
-      questionId: req.params.questionId,
-      answers: req.params.answers
-    })
-    resultArray.push(result);
-    res.status(200).send({ payload: [] });
-
-  } catch (error) {
-    next(new AppError(error.message));
-  }
-};
-
-export { getAllResults, getResultById, addResults, deleteResultById, findByIdAndUpdate, addRecord };
+export { getAllResults, getResultById, addResults, deleteResultById, findByIdAndUpdate };
