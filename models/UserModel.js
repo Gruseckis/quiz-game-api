@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
+
   {
     username: { type: String, trim: true, unique: true, required: true },
     email: { type: String, trim: true, required: true },
@@ -28,7 +29,6 @@ userSchema.pre('save', async function callback(next) {
     console.log(UserExist);
     this.level = 'admin';
   }
-
   if (this.hashedPassword) {
     this.hashedPassword = await bcrypt.hash(
       this.hashedPassword,
