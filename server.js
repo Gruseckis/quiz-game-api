@@ -12,6 +12,7 @@ import usersRoutes from './routes/usersRoutes';
 import quizRoutes from './routes/quizRouter';
 
 import authRouter from './routes/authRouter';
+import mediaRoutes from './routes/mediaRouter';
 import authenticate from './middlewares/authenticate';
 
 const app = express();
@@ -43,6 +44,7 @@ app.use(`/api/v${process.env.API_VERSION}/records`, recordsRouter);
 app.use(`/api/v${process.env.API_VERSION}/results`, resultsRoute);
 app.use(`/api/v${process.env.API_VERSION}/questions`, questionRouter);
 app.use(`/api/v${process.env.API_VERSION}/users`, authenticate, usersRoutes);
+app.use(`/api/v${process.env.API_VERSION}/media`, authenticate, mediaRoutes);
 app.use(`/api/v${process.env.API_VERSION}/quizzes`, authenticate, quizRoutes);
 app.use(`/api/v${process.env.API_VERSION}`, index);
 
