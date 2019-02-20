@@ -29,6 +29,7 @@ const UserModel = mongoose.model('User',userSchema);
 
 const save = async model => new UserModel(model).save();
 const getUserByUsername = async username => UserModel.findOne({username});
+const getUserById = async id => UserModel.findOne({_id: id});
 const getUsers = async () => UserModel.find();
 const updateUser = async(id,model) => UserModel.findByIdAndUpdate(id, model, {new: true});
 const deleteUser = async(id) =>  UserModel.findByIdAndRemove(id);
@@ -38,4 +39,4 @@ UserModel.schema
   .path('username')
   .validate(async username => !(await getUserByUsername(username)), 'User already exists!');
 
-export { save, getUserByUsername, comparePassword, userSchema, getUsers, UserModel, updateUser, deleteUser };
+export { save, getUserByUsername, comparePassword, userSchema, getUsers, UserModel, updateUser, deleteUser, getUserById };

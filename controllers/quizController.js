@@ -46,16 +46,19 @@ const updateQuiz = async (req, res, next) => {
 
 const deleteQuiz = async (req, res, next) => {
   try {
-    const result = await QuizModel.deleteQuizById(req.params.quizId);
-    console.log(result);
-    if (!result) {
-      throw new AppError('Cannot delete quiz which does not exist');
-    }
-    res.status(200).send({
-      payload: {
-        message: 'Successfully deleted quiz'
+    if(await isOwner(req.params.quizId, req.user._id) || req.user.level=="moderator" || req.user.level=="admin"){
+      const result = await QuizModel.deleteQuizById(req.params.quizId);
+      if (!result) {
+        throw new AppError('Cannot delete quiz which does not exist');
       }
-    });
+      res.status(200).send({
+        payload: {
+          message: 'Successfully deleted quiz'
+        }
+      });
+    } else {
+      throw new AppError('Only owner, moderator or admin can delete the quiz');
+    }
   } catch (error) {
     next(error instanceof AppError ? error : new AppError(error.message));
   }
