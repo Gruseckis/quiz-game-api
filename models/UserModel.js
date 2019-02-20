@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
   level: {type: String, trim: true, required: true, enum :['user', 'quizer', 'moderator', 'admin'], default: 'user'}
 },
 {
-  timestamps: true
+  timestamp: true
 });
 
 userSchema.pre('save', async function callback(next){
