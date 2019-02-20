@@ -1,14 +1,14 @@
 import AppError from '../errors/AppError';
 import {
   save,
-  getRecordById,
+  getRecordUsingId,
   updateById,
   deleteRecordById,
-  getAllRecords
+  getRecords
 } from '../models/recordsModel';
 const getAllRecords = async (req, res) => {
   try {
-    const record = await getAllRecords();
+    const record = await getRecords();
     res.status(200).send({ payload: record });
   } catch (error) {
     next(new AppError(error.message));
@@ -17,7 +17,7 @@ const getAllRecords = async (req, res) => {
 
 const getRecordById = async (req, res, next) => {
   try {
-    const record = await getRecordById(req.params.recordId);
+    const record = await getRecordUsingId(req.params.recordId);
     if (record) {
       res.status(200).send({ payload: record });
     } else {
