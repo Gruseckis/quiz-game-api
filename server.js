@@ -38,18 +38,17 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
 
-app.use(`/api/v${process.env.API_VERSION}/records`, recordsRouter);
-app.use(`/api/v${process.env.API_VERSION}/results`, resultsRoute);
-app.use(`/api/v${process.env.API_VERSION}/questions`, questionRouter);
+// Routing
+app.use(`/api/v${process.env.API_VERSION}/auth`, authRouter);
 app.use(`/api/v${process.env.API_VERSION}/users`, authenticate, usersRoutes);
+app.use(`/api/v${process.env.API_VERSION}/results`, authenticate, resultsRoute);
+app.use(`/api/v${process.env.API_VERSION}/records`, authenticate, recordsRouter);
 app.use(`/api/v${process.env.API_VERSION}/media`, authenticate, mediaRoutes);
 app.use(`/api/v${process.env.API_VERSION}/quizzes`, authenticate, quizRoutes);
+app.use(`/api/v${process.env.API_VERSION}/questions`, authenticate, questionRouter);
 app.use(`/api/v${process.env.API_VERSION}`, index);
 
-
-app.use(`/api/v${process.env.API_VERSION}`, index);
 app.use('/uploads', express.static('uploads'));
 app.use(defaultErrorHandler);
 const host = process.env[`HOST_${process.platform.toUpperCase()}`];
