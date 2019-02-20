@@ -1,14 +1,8 @@
 import AppError from '../errors/AppError';
-import {
-  save,
-  getRecordById,
-  updateById,
-  deleteRecordById,
-  getAllRecords
-} from '../models/recordsModel';
+import * as RecordModel from '../models/recordsModel';
 const getAllRecords = async (req, res) => {
   try {
-    const record = await getAllRecords();
+    const record = await RecordModel.getAllRecords();
     res.status(200).send({ payload: record });
   } catch (error) {
     next(new AppError(error.message));
@@ -17,7 +11,7 @@ const getAllRecords = async (req, res) => {
 
 const getRecordById = async (req, res, next) => {
   try {
-    const record = await getRecordById(req.params.recordId);
+    const record = await RecordModel.getRecordById(req.params.recordId);
     if (record) {
       res.status(200).send({ payload: record });
     } else {
@@ -29,7 +23,7 @@ const getRecordById = async (req, res, next) => {
 };
 const addRecord = async (req, res, next) => {
   try {
-    const record = await save({
+    const record = await RecordModel.save({
       questionId: req.body.questionId,
       answers: req.body.answers
     });
@@ -41,7 +35,9 @@ const addRecord = async (req, res, next) => {
 
 const updateRecord = async (req, res, next) => {
   try {
-    const record = await updateById(req.params.recordId, { ...req.body });
+    const record = await RecordModel.updateById(req.params.recordId, {
+      ...req.body
+    });
     if (!record) {
       throw new AppError("This record doesn't exist");
     }
@@ -53,7 +49,7 @@ const updateRecord = async (req, res, next) => {
 
 const deleteRecord = async (req, res, next) => {
   try {
-    const remove = await deleteRecordById(req.params.recordId);
+    const remove = await RecordModel.deleteRecordById(req.params.recordId);
     if (!remove) {
       throw new AppError('Send valid recordId');
     }
