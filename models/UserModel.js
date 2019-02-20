@@ -41,6 +41,7 @@ const UserModel = mongoose.model('User', userSchema);
 
 const save = async model => new UserModel(model).save();
 const getUserByUsername = async username => UserModel.findOne({ username });
+const getUserById = async id => UserModel.findById(id);
 const getUsers = async () => UserModel.find();
 const updateUser = async (id, model) =>
   UserModel.findByIdAndUpdate(id, model, { new: true });
@@ -63,5 +64,6 @@ export {
   getUsers,
   UserModel,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserById
 };
