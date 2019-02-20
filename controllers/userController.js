@@ -1,7 +1,7 @@
 
-import {getUsers, updateUser, deleteUser, getUserById} from "../models/UserModel";
+import { getUsers, updateUser, deleteUser } from "../models/UserModel";
 import AppError from "../errors/AppError";
-import {accessLevelCheck} from "../helpers/accessLevelCheck";
+import { accessLevelCheck } from "../helpers/accessLevelCheck";
 
 const logger = require('../utils/logger')('logController');
 
@@ -17,10 +17,14 @@ const getUserInfo = async (req, res) => {
 
 const getAllUsers = async (req, res, next) => {
   try {
-    const users = await getUsers();
-    res.status(200).send({
-      payload: users,
-    });
+    if(accessLevelCheck(req.user.level, "admin")){
+      const users = await getUsers();
+      res.status(200).send({
+        payload: users,
+      });
+    } else {
+      throw new AppError('Only admin can get all the users');
+    }
   }catch(error){
     next(new AppError(error.message));
   }
