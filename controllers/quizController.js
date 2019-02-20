@@ -31,12 +31,31 @@ const addQuiz = async (req, res, next) => {
 const updateQuiz = async (req, res, next) => {
   try {
     const body = { ...req.body };
-    const updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, body);
+    // const keys = Object.keys(body);
+    const keysLength = Object.keys(body).length;
+    let updatedQuiz = {};
+
+    if (keysLength < 1 || keysLength > 2) {
+      throw new AppError('Invalid properties defined');
+    } else if (keysLength === 2) {
+      if (body.hasOwnProperty('name') && body.hasOwnProperty('description')) {
+        updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, body);
+      } else {
+        throw new AppError('Invalid properties defined');
+      }
+    } else {
+      if (body.hasOwnProperty('name') || body.hasOwnProperty('description')) {
+        updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, body);
+      } else {
+        throw new AppError('Invalid properties defined');
+      }
+    }
+
     res.status(200).send({
       payload: updatedQuiz
     });
   } catch (error) {
-    next(new AppError(error.message));
+    next(error instanceof AppError ? error : new AppError(error.message));
   }
 }
 
