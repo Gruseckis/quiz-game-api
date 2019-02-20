@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
 {
-  username: {type: String, trim: true, unique: true, required: true},
+  username: {type: String, lowercase: true, trim: true, unique: true, required: true},
   email: {type: String, trim: true, required: true},
   hashedPassword: {type: String, trim: true, required: true},
   name: {type: String, trim: true, required: true},
@@ -36,6 +36,6 @@ const comparePassword = async ({userPassword, hashedPassword}) => bcrypt.compare
 
 UserModel.schema
   .path('username')
-  .validate(async username => !(await getUserByName(username)), 'User already exists!');
+  .validate(async username => !(await getUserByUsername(username)), 'User already exists!');
 
 export { save, getUserByUsername, comparePassword, userSchema, getUsers, UserModel, updateUser, deleteUser };
