@@ -1,6 +1,7 @@
 
 import {getUsers, updateUser, deleteUser, getUserById} from "../models/UserModel";
 import AppError from "../errors/AppError";
+import {accessLevelCheck} from "../helpers/accessLevelCheck";
 
 const logger = require('../utils/logger')('logController');
 
@@ -28,7 +29,7 @@ const getAllUsers = async (req, res, next) => {
 const updateOneUser = async (req, res, next) => {
   try {
     const id = req.params.userId;
-    if(await isOwner(req.user._id, id) || req.user.level == "admin"){
+    if((req.user._id).toString() === id || accessLevelCheck(req.user.level,'admin')){
       const body = {...req.body}; 
       const updatedUser = await updateUser(id, body);
       if(updatedUser){
@@ -49,7 +50,7 @@ const updateOneUser = async (req, res, next) => {
 const deleteOneUser = async (req, res, next) => {
   try {
     const id = req.params.userId;
-    if(req.user.level == "admin"){
+    if(accessLevelCheck(req.user.level,'admin')){
       const deletedUser = await deleteUser(id);
       if(deletedUser){
         res.status(200).send({
