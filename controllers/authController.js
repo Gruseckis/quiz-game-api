@@ -10,7 +10,7 @@ const register = async (req, res, next) => {
     const { body } = req;
     try {
         const user = await save({
-            username: body.username,
+            username: body.username.toLowerCase(),
             email: body.email,
             hashedPassword: body.hashedPassword,
             name: body.name,
@@ -27,7 +27,7 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
     logger.log('debug', 'logIn: %j', req.body);
     try {
-        const user = await getUserByUsername(req.body.username);
+        const user = await getUserByUsername(req.body.username.toLowerCase());
         if (!user) {
             logger.log('debug', `Login failed for user: ${req.body.username}`);
             throw new AppError('Wrong user credentials!', 400);
