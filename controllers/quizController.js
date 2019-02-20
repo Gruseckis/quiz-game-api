@@ -31,10 +31,14 @@ const addQuiz = async (req, res, next) => {
 const updateQuiz = async (req, res, next) => {
   try {
     const body = { ...req.body };
-    const updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, body);
-    res.status(200).send({
-      payload: updatedQuiz
-    });
+    if(await isOwner(req.params.quizId, req.user._id) || req.user.level=="moderator" || req.user.level=="admin"){
+      const updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, body);
+      res.status(200).send({
+        payload: updatedQuiz
+      });
+    } else {
+      throw new AppError('Only owner, moderator or admin can update the quiz');
+    }
   } catch (error) {
     next(new AppError(error.message));
   }
@@ -56,5 +60,19 @@ const deleteQuiz = async (req, res, next) => {
     next(error instanceof AppError ? error : new AppError(error.message));
   }
 }
+
+const isOwner = async(quizId, userId) => {
+  const quiz = await QuizModel.getQuizById(quizId);
+  const ownerId = quiz.ownerId;
+  if(userId == ownerId){
+    console.log(true);
+    return true
+  } else {
+    console.log(false);
+    return false
+  }
+}
+
+
 
 export { getQuizzes, addQuiz, updateQuiz, deleteQuiz };
