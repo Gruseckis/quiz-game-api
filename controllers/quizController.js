@@ -13,9 +13,10 @@ const getQuizzes = async (req, res, next) => {
 }
 
 const addQuiz = async (req, res, next) => {
+  const { user } = req;
   try {
     const quiz = await QuizModel.save({
-      ownerId: req.body.userId,
+      ownerId: user.id,
       name: req.body.name,
       description: req.body.description
     });
