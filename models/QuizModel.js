@@ -5,7 +5,7 @@ const quizSchema = new mongoose.Schema(
     ownerId: { type: String, unique: false, required: true },
     name: { type: String, unique: false, required: true },
     description: { type: String, unique: false, required: false },
-    questions: [{ type: String, unique: false, required: false }]
+    questions: [{ type: String, unique: false, required: false }],
   },
   { timestamps: true }
 );
@@ -30,12 +30,18 @@ const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, mode
 
 const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 
-
-export { QuizModel, quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
+export {
+  QuizModel,
+  quizSchema,
+  save,
+  getAllQuizzes,
+  getQuizById,
+  getQuizzesByOwnerId,
+  updateQuizById,
+  deleteQuizById,
+  getQuizByQuestionId,
+};
 
 QuizModel.schema
   .path('name')
   .validate(async name => !(await getQuizByName(name.toLowerCase())), 'Quiz already exists!');
-
-
-export { quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById, getQuizByQuestionId };
