@@ -1,6 +1,7 @@
 import AppError from '../errors/AppError';
 import * as RecordModel from '../models/recordsModel';
 import { ResultModel } from '../models/resultModel';
+import { accessLevelCheck } from '../helpers/accessLevelCheck';
 
 const getAllRecords = async (req, res) => {
   try {
@@ -39,15 +40,37 @@ const addRecord = async (req, res, next) => {
 
 const updateRecord = async (req, res, next) => {
   try {
-    const record = await RecordModel.updateById(req.params.recordId, {
-      ...req.body,
-    });
-    if (!record) {
-      throw new AppError("This record doesn't exist");
+    const body = { ...req.body };
+    if(accessLevelCheck(req.user.level,'moderator')){
+      const keys = Object.keys(body);
+      let recordUpdate = {};
+      let updatedRecord;
+
+      keys.forEach(key => {
+        if (key === 'answers' || key === 'textAnswer') {
+          if (body[key] !== null) {
+            recordUpdate[key] = body[key];
+          }
+        }
+      });
+
+      if (Object.keys(recordUpdate).length <= 0) {
+        throw new AppError('Nothing to update');
+      } else {
+        updatedRecord = await RecordModel.updateById(req.params.recordId, recordUpdate);
+      }
+      
+      if(!updatedRecord){
+        throw new AppError("Record not found");
+      }
+      res.status(200).send({
+        payload: updatedRecord
+      });
+    } else {
+      throw new AppError('Only moderator or admin can update record');
     }
-    res.status(200).send({ payload: record });
   } catch (error) {
-    next(new AppError(error.message));
+    next(error instanceof AppError ? error : new AppError(error.message));
   }
 };
 
