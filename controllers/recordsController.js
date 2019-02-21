@@ -53,6 +53,7 @@ const updateRecord = async (req, res, next) => {
 
 const deleteRecord = async (req, res, next) => {
   try {
+    await ResultModel.update(req.body.resultId, { $pull: { recordIds: req.params.recordId } });
     const remove = await RecordModel.deleteRecordById(req.params.recordId);
     if (!remove) {
       throw new AppError('Send valid recordId');
