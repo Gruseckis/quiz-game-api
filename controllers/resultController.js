@@ -38,6 +38,8 @@ const deleteResultById = async (req, res, next) => {
     const deletedResult = await ResultModel.deleteResultById(id);
 
     if (deletedResult) {
+      const recordIdArray = [...deletedResult.recordIds];
+      await RecordModel.deleteRecordsFromIdArray(recordIdArray)
       res.status(200).send({ payload: 'Result is deleted' });
     } else {
       throw new AppError('Result not found');
