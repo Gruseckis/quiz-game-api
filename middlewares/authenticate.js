@@ -31,7 +31,7 @@ const authenticate = async (req, res, next) => {
                 return next();
             }
         }
-        return next(new AuthError('No such user'));
+        return next(new AuthError('Invalid token'));
     }
     return next(new AuthError('No token provided or token expired'));
 };
