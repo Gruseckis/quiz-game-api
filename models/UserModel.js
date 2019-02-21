@@ -14,11 +14,11 @@ const userSchema = new mongoose.Schema(
       trim: true,
       required: true,
       enum: ['user', 'quizer', 'moderator', 'admin'],
-      default: 'user'
-    }
+      default: 'user',
+    },
   },
   {
-    timestamp: true
+    timestamps: true,
   }
 );
 
@@ -29,10 +29,7 @@ userSchema.pre('save', async function callback(next) {
   }
 
   if (this.hashedPassword) {
-    this.hashedPassword = await bcrypt.hash(
-      this.hashedPassword,
-      parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10)
-    );
+    this.hashedPassword = await bcrypt.hash(this.hashedPassword, parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10));
   }
   next();
 });
@@ -43,18 +40,13 @@ const save = async model => new UserModel(model).save();
 const getUserByUsername = async username => UserModel.findOne({ username });
 const getUserById = async id => UserModel.findById(id);
 const getUsers = async () => UserModel.find();
-const updateUser = async (id, model) =>
-  UserModel.findByIdAndUpdate(id, model, { new: true });
+const updateUser = async (id, model) => UserModel.findByIdAndUpdate(id, model, { new: true });
 const deleteUser = async id => UserModel.findByIdAndRemove(id);
-const comparePassword = async ({ userPassword, hashedPassword }) =>
-  bcrypt.compare(userPassword, hashedPassword);
+const comparePassword = async ({ userPassword, hashedPassword }) => bcrypt.compare(userPassword, hashedPassword);
 
 UserModel.schema
   .path('username')
-  .validate(
-    async username => !(await getUserByUsername(username)),
-    'User already exists!'
-  );
+  .validate(async username => !(await getUserByUsername(username)), 'User already exists!');
 
 export {
   save,
@@ -65,5 +57,5 @@ export {
   UserModel,
   updateUser,
   deleteUser,
-  getUserById
+  getUserById,
 };
