@@ -4,7 +4,9 @@ import * as mediaController from '../controllers/mediaController';
 
 const router = express.Router();
 
-router.get('/:mediaId', mediaController.getMediaById);
 router.post('', diskStorageSingle, mediaController.addMedia);
+router.route('/:mediaId')
+  .get(mediaController.getMediaById)
+  .delete(mediaController.deleteMediaById);
 
 export default router;

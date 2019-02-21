@@ -20,6 +20,8 @@ const getAllQuizzes = async () => QuizModel.find();
 
 const getQuizById = async _id => QuizModel.findOne({ _id });
 
+const getQuizByName = async name => QuizModel.findOne({ name });
+
 const getQuizzesByOwnerId = async ownerId => QuizModel.find({ ownerId });
 
 const getQuizByQuestionId = async questionId => QuizModel.findOne({ questions: { $in: [questionId] } });
@@ -32,4 +34,5 @@ QuizModel.schema
   .path('name')
   .validate(async name => !(await getQuizByName(name.toLowerCase())), 'Quiz already exists!');
 
-export { QuizModel, quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById, getQuizByQuestionId };
+export { quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById, getQuizByQuestionId };
+

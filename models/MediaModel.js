@@ -14,4 +14,6 @@ const save = async model => new MediaModel(model).save();
 
 const getMediaById = async _id => MediaModel.findOne({ _id });
 
-export { save, getMediaById, mediaSchema, MediaModel };
+const deleteMediaById = async _id => MediaModel.findOneAndDelete({ _id });
+
+export { save, getMediaById, deleteMediaById, mediaSchema, MediaModel };
