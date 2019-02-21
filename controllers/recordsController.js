@@ -29,7 +29,10 @@ const addRecord = async (req, res, next) => {
     const record = await RecordModel.save({
       questionId: req.body.questionId,
       answers: req.body.answers,
+<<<<<<< HEAD
       userId: req.user._id
+=======
+>>>>>>> 594330b92fae3605dc9ff415d7f2525f8264a6a3
     });
     await ResultModel.findByIdAndUpdate(req.body.resultId, { $push: { recordIds: record.id } });
     res.status(201).send({ payload: { message: 'Record was created', record } });

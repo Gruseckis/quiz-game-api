@@ -4,7 +4,10 @@ const recordSchema = new mongoose.Schema(
     questionId: { type: String, required: true, unique: false },
     answers: [{ type: Number, required: true }],
     textAnswer: { type: String, trim: true },
+<<<<<<< HEAD
     userId: { type: String, unique: false, required: true }
+=======
+>>>>>>> 594330b92fae3605dc9ff415d7f2525f8264a6a3
   },
   { timestamps: true }
 );
