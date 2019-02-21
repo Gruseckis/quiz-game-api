@@ -22,8 +22,10 @@ const getQuizById = async _id => QuizModel.findOne({ _id });
 
 const getQuizzesByOwnerId = async ownerId => QuizModel.find({ ownerId });
 
+const getQuizByQuestionId = async questionId => QuizModel.findOne({ questions: { $in: [questionId] } });
+
 const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, model, { new: true });
 
 const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 
-export { quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
+export { quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById, getQuizByQuestionId };
