@@ -44,22 +44,32 @@ const updateOneUser = async (req, res, next) => {
       }
     }
     if (req.user._id.toString() === id) {
-      const hashedPassword = await bcrypt.hash(
-        req.body.hashedPassword,
-        parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10)
-      );
-      const { username } = req.body;
-      const body = { username, hashedPassword };
-      const updatedUser = await updateUser(id, { ...body });
-      if (updatedUser) {
-        res.status(200).send({
-          payload: updatedUser
-        });
+      const body = { ...req.body };
+      const keys = Object.keys(body);
+      let userUpdate = {};
+      let updatedUser;
+      keys.forEach(key => {
+        if (key === 'username' || key === 'hashedPassword') {
+          if (body[key] !== null) {
+            userUpdate[key] = body[key];
+          }
+        }
+      });
+      if (Object.keys(userUpdate).length <= 0) {
+        throw new AppError('Nothing to update');
       } else {
-        throw new AppError('You do not have a permision to update');
+        if (userUpdate.hashedPassword) {
+          const hashedPassword = await bcrypt.hash(
+            userUpdate.hashedPassword,
+            parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10)
+          );
+          userUpdate.hashedPassword = hashedPassword;
+        }
+        updatedUser = await updateUser(id, userUpdate);
       }
-    } else {
-      throw new AppError('You do not have a permision to update');
+      res.status(200).send({
+        payload: updatedUser
+      });
     }
   } catch (error) {
     next(new AppError(error.message));
