@@ -31,11 +31,11 @@ const updateQuestionByID = async (_id, update) => QuestionModel.findByIdAndUpdat
 const deleteQuestionByID = async _id => QuestionModel.findByIdAndDelete(_id);
 
 export {
-   QuestionModel,
-   questionSchema,
-   save,
-   getAllQuestions,
-   getQuestionByID,
-   updateQuestionByID,
-   deleteQuestionByID,
+  QuestionModel,
+  questionSchema,
+  save,
+  getAllQuestions,
+  getQuestionByID,
+  updateQuestionByID,
+  deleteQuestionByID,
 };
