@@ -1,5 +1,7 @@
 import {save, getAllQuestions, getQuestionByID, updateQuestionByID, deleteQuestionByID} from '../models/questionModel';
 import AppError from '../errors/AppError';
+import { QuizModel } from '../models/QuizModel';
+
 
 const addNewQuestion = async(req, res, next) => {
    try {
@@ -9,6 +11,9 @@ const addNewQuestion = async(req, res, next) => {
          answers: req.body.answers,
          type: req.body.type
       });
+      
+      await QuizModel.findByIdAndUpdate(req.body.quizId, {$push:{questions: question.id}} );
+      
       res.status(200).send({payload: question})
    } catch(error) {
       next(new AppError(error.message ))
