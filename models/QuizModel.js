@@ -28,4 +28,8 @@ const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, mode
 
 const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 
-export { quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById, getQuizByQuestionId };
+QuizModel.schema
+  .path('name')
+  .validate(async name => !(await getQuizByName(name.toLowerCase())), 'Quiz already exists!');
+
+export { QuizModel, quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById, getQuizByQuestionId };
