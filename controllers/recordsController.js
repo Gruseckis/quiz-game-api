@@ -25,7 +25,8 @@ const addRecord = async (req, res, next) => {
   try {
     const record = await RecordModel.save({
       questionId: req.body.questionId,
-      answers: req.body.answers
+      answers: req.body.answers,
+      userId: req.user._id
     });
     res.status(201).send({ message: 'Record was created' });
   } catch (error) {

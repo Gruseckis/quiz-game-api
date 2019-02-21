@@ -4,14 +4,12 @@ const questionSchema = new mongoose.Schema(
    {
       question: { type: String, required: true },
       correct: [{ type: Number, required: true }], // array of correct answer ID's
-      answers: [{ type: String, required: true, unique: false }], // array of possible answers as strings
+      answers: [{ type: String, required: true }], // array of possible answers as strings
       type: { type: String, required: true, enum: ['input', 'checkout', 'radio', 'textbox'] },
-      userId: { type: String, unique: false, required: true },
    },
    { timestamps: true },
 );
 
-questionSchema.index({ userId: 1, answers: 1 }, { unique: true });
 
 const QuestionModel = mongoose.model('Question', questionSchema);
 

@@ -2,10 +2,13 @@ import mongoose from 'mongoose';
 const recordSchema = new mongoose.Schema(
   {
     questionId: { type: String, required: true, unique: false },
-    answers: [{ type: String, required: true }]
+    answers: [{ type: String, required: true }],
+    userId: { type: String, unique: false, required: true },
   },
   { timestamps: true }
 );
+
+recordSchema.index({ userId: 1, questionId: 1 }, { unique: true });
 
 const RecordModel = mongoose.model('Record', recordSchema);
 
