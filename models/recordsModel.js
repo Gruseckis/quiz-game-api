@@ -2,8 +2,9 @@ import mongoose from 'mongoose';
 const recordSchema = new mongoose.Schema(
   {
     questionId: { type: String, required: true, unique: false },
-    answers: [{ type: String, required: true }],
-    userId: { type: String, unique: false, required: true },
+    answers: [{ type: Number, required: true }],
+    textAnswer: { type: String, trim: true },
+    userId: { type: String, unique: false, required: true }
   },
   { timestamps: true }
 );
@@ -16,11 +17,9 @@ const save = async model => new RecordModel(model).save();
 const getAllRecords = async () => RecordModel.find();
 const getRecordById = async _id => RecordModel.findById(_id);
 
-const updateById = async (recordId, update) =>
-  RecordModel.findByIdAndUpdate(recordId, update, { new: true });
+const updateById = async (recordId, update) => RecordModel.findByIdAndUpdate(recordId, update, { new: true });
 
-const deleteRecordById = async recordId =>
-  RecordModel.findByIdAndDelete(recordId);
+const deleteRecordById = async recordId => RecordModel.findByIdAndDelete(recordId);
 
 const getRecordsFromIdArray = async arrayId => {
   RecordModel.find({ _id: { $in: [arrayId] } });
@@ -34,5 +33,5 @@ export {
   updateById,
   deleteRecordById,
   getAllRecords,
-  getRecordsFromIdArray
+  getRecordsFromIdArray,
 };

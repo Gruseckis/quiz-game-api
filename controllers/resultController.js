@@ -1,4 +1,5 @@
 import * as ResultModel from '../models/resultModel';
+import * as RecordModel from '../models/recordsModel';
 import AppError from '../errors/AppError';
 
 const getAllResults = async (req, res, next) => {
@@ -22,9 +23,8 @@ const getResultById = async (req, res, next) => {
 const addResults = async (req, res, next) => {
   try {
     const result = await ResultModel.save({
-      message: req.body.text,
-      username: req.user.username,
-      resultId: req.params.resultId,
+      quizId: req.body.quizId,
+      userId: req.user._id,
     });
     res.status(200).send({ payload: { result } });
   } catch (error) {
