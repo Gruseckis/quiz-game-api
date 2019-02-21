@@ -20,10 +20,12 @@ const getAllQuestions = async () => QuestionModel.find();
 // get specific question by providing question ID
 const getQuestionByID = async _id => QuestionModel.findById(_id);
 
+const getQuestionByQuestionName = async question => QuestionModel.findOne({question});
+
 // updates question by provided ID
 const updateQuestionByID = async (_id, update) => QuestionModel.findByIdAndUpdate(_id, update, {new: true });
 
 // delete question by provided ID(only quis owner or admin can delete questions)
 const deleteQuestionByID = async _id => QuestionModel.findByIdAndDelete(_id);
 
-export  { QuestionModel, questionSchema, save, getAllQuestions, getQuestionByID, updateQuestionByID, deleteQuestionByID };
+export  { QuestionModel, questionSchema, save, getAllQuestions, getQuestionByID, updateQuestionByID, deleteQuestionByID, getQuestionByQuestionName };
