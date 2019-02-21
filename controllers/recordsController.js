@@ -1,5 +1,7 @@
 import AppError from '../errors/AppError';
 import * as RecordModel from '../models/recordsModel';
+import { ResultModel } from '../models/resultModel';
+
 const getAllRecords = async (req, res) => {
   try {
     const record = await RecordModel.getAllRecords();
@@ -21,13 +23,15 @@ const getRecordById = async (req, res, next) => {
     next(new AppError(error.message));
   }
 };
+
 const addRecord = async (req, res, next) => {
   try {
     const record = await RecordModel.save({
       questionId: req.body.questionId,
-      answers: req.body.answers
+      answers: req.body.answers,
     });
-    res.status(201).send({ message: 'Record was created' });
+    await ResultModel.findByIdAndUpdate(req.body.resultId, { $push: { recordIds: record.id } });
+    res.status(201).send({ payload: { message: 'Record was created', record } });
   } catch (error) {
     next(new AppError(error.message, 400));
   }
@@ -36,7 +40,7 @@ const addRecord = async (req, res, next) => {
 const updateRecord = async (req, res, next) => {
   try {
     const record = await RecordModel.updateById(req.params.recordId, {
-      ...req.body
+      ...req.body,
     });
     if (!record) {
       throw new AppError("This record doesn't exist");
