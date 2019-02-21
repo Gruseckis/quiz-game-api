@@ -7,7 +7,7 @@ export const levelCheck = async (req, res, next) => {
         const quiz = await QuizModel.getQuizByQuestionId(req.body.questionId);
         const userLevel = req.user.level;
         const possibleLevels = UserModel.userSchema.obj.level.enum
-        const accessLevel = 'quizer'
+        const accessLevel = process.env.ACCESS_LEVEL
         const userId = req.user._id;
         const ownerId = quiz.ownerId
         if (possibleLevels.indexOf(userLevel) >= possibleLevels.indexOf(accessLevel) || userId == ownerId) {
