@@ -44,33 +44,33 @@ const updateOneUser = async (req, res, next) => {
       }
     }
     if (req.user._id.toString() === id) {
-      const body = { ...req.body };
-      const keys = Object.keys(body);
+      const { username, hashedPassword } = req.body;
       let userUpdate = {};
       let updatedUser;
-      keys.forEach(key => {
-        if (key === 'username' || key === 'hashedPassword') {
-          if (body[key] !== null) {
-            userUpdate[key] = body[key];
-          }
-        }
-      });
-      if (Object.keys(userUpdate).length <= 0) {
-        throw new AppError('Nothing to update');
-      } else {
-        if (userUpdate.hashedPassword) {
-          const hashedPassword = await bcrypt.hash(
-            userUpdate.hashedPassword,
-            parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10)
-          );
-          userUpdate.hashedPassword = hashedPassword;
-        }
+
+      if (hashedPassword) {
+        const reshedPassword = await bcrypt.hash(
+          hashedPassword,
+          parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10)
+        );
+        userUpdate.hashedPassword = reshedPassword;
+        updatedUser = await updateUser(id, userUpdate);
+      }
+      if (username) {
+        userUpdate.username = username;
+        updatedUser = await updateUser(id, userUpdate);
+      }
+      if (username && hashedPassword) {
+        userUpdate.username = username;
         updatedUser = await updateUser(id, userUpdate);
       }
       res.status(200).send({
         payload: updatedUser
       });
+    } else {
+      throw new AppError('Id is not provided');
     }
+    next();
   } catch (error) {
     next(new AppError(error.message));
   }
