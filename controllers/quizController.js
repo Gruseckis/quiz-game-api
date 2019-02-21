@@ -34,7 +34,24 @@ const updateQuiz = async (req, res, next) => {
     const body = { ...req.body };
     const checkIfOwner = await isOwner(req.params.quizId, req.user._id);
     if(checkIfOwner || accessLevelCheck(req.user.level,'moderator')){
-      const updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, body);
+      const keys = Object.keys(body);
+      let quizUpdate = {};
+      let updatedQuiz;
+
+      keys.forEach(key => {
+        if (key === 'name' || key === 'description') {
+          if (body[key] !== null) {
+            quizUpdate[key] = body[key];
+          }
+        }
+      });
+
+      if (Object.keys(quizUpdate).length <= 0) {
+        throw new AppError('Nothing to update');
+      } else {
+        updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, quizUpdate);
+      }
+      
       if(!updatedQuiz){
         throw new AppError("Quiz not found");
       }
