@@ -3,8 +3,6 @@ import AppError from '../errors/AppError';
 import { QuizModel, updateQuizById, getAllQuizzes, findQuizByQuestionId  } from '../models/QuizModel';
 import { type } from 'os';
 
-
-
 const addNewQuestion = async(req, res, next) => {
    try {
       const question = await save({
