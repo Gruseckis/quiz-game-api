@@ -16,6 +16,8 @@ const QuizModel = mongoose.model('Quiz', quizSchema);
 
 const save = async model => new QuizModel(model).save();
 
+const findQuizByQuestionId = async input => QuizModel.find(input);
+
 const getAllQuizzes = async () => QuizModel.find();
 
 const getQuizById = async _id => QuizModel.findOne({ _id });
@@ -26,4 +28,6 @@ const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, mode
 
 const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 
-export { QuizModel, quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
+
+
+export { findQuizByQuestionId, QuizModel, quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };

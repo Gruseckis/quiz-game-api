@@ -1,6 +1,8 @@
 import {save, getAllQuestions, getQuestionByID, updateQuestionByID, deleteQuestionByID} from '../models/questionModel';
 import AppError from '../errors/AppError';
-import { QuizModel } from '../models/QuizModel';
+import { QuizModel, updateQuizById, getAllQuizzes, findQuizByQuestionId  } from '../models/QuizModel';
+import { type } from 'os';
+
 
 
 const addNewQuestion = async(req, res, next) => {
@@ -49,9 +51,13 @@ const updateQuestionById = async(req, res, next) => {
 
 const deleteQuestionbyID = async(req, res, next) => {
    try {
+      let targetQuiz = await findQuizByQuestionId({questions:{$in:[req.params.questionId]}});
+      targetQuiz = targetQuiz[0];
+      targetQuiz.questions.splice(targetQuiz.questions.indexOf(req.params.questionId),1);
+      await QuizModel(targetQuiz).save();
       const question = await deleteQuestionByID(req.params.questionId);
       if (question) 
-         { res.status(200).send({message: `Question was successfully deleted`}); }
+         {res.status(200).send({message: `Question was successfully deleted`}); }
       else 
          {throw new AppError("This questionId doesn't exist")}
    } catch(error) {
