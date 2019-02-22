@@ -13,6 +13,7 @@ const RecordModel = mongoose.model('Record', recordSchema);
 const save = async model => new RecordModel(model).save();
 const getAllRecords = async () => RecordModel.find();
 const getRecordById = async _id => RecordModel.findById(_id);
+const getAllRecordsByQuestionId = async questionId => RecordModel.find({questionId});
 
 const updateById = async (recordId, update) => RecordModel.findByIdAndUpdate(recordId, update, { new: true });
 
@@ -31,4 +32,5 @@ export {
   deleteRecordById,
   getAllRecords,
   getRecordsFromIdArray,
+  getAllRecordsByQuestionId
 };
