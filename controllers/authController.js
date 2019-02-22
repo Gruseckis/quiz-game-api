@@ -8,7 +8,8 @@ const register = async (req, res, next) => {
   logger.log('debug', 'register: %j', req.body);
   const { body } = req;
   try {
-    const { email } = req.body;
+    let { email } = req.body;
+    email = email === undefined || email === null ? '' : email;
     if (validator.isEmail(email)) {
       const user = await save({
         username: body.username.toLowerCase(),
