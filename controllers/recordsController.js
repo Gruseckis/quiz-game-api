@@ -42,7 +42,7 @@ const addRecord = async (req, res, next) => {
     const quiz = await getQuizByQuestionId(req.body.questionId);
     const quesionsArray = quiz.questions;
     const indexOfCurrentQuestion = quesionsArray.indexOf(req.body.questionId);
-    const nextQuestionId = quesionsArray[indexOfCurrentQuestion + 1];
+    const nextQuestionId = quesionsArray[indexOfCurrentQuestion + 1] || [];
     await ResultModel.findByIdAndUpdate(req.body.resultId, { $push: { recordIds: record.id } });
     
     res.status(200).send({ payload: { message: 'Saved', correct, nextQuestionId } });
@@ -54,11 +54,10 @@ const addRecord = async (req, res, next) => {
 function arraysEqual(arr1, arr2) {
   if(arr1.length !== arr2.length)
       return false;
-  for(var i = arr1.length; i--;) {
+  for(let i = arr1.length; i--;) {
       if(parseInt(arr1[i]) !== parseInt(arr2[i]))
           return false;
   }
-
   return true;
 }
 
