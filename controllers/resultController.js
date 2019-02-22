@@ -36,7 +36,6 @@ const deleteResultById = async (req, res, next) => {
   try {
     const id = req.params.resultId;
     const deletedResult = await ResultModel.deleteResultById(id);
-    console.log(deletedResult);
     if (deletedResult) {
       res.status(200).send({ payload: 'Result is deleted' });
     } else {
