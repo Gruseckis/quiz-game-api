@@ -1,7 +1,6 @@
 import * as ResultModel from '../models/resultModel';
-import * as RecordModel from '../models/recordsModel';
 import AppError from '../errors/AppError';
-import { model } from 'mongoose';
+
 
 const getAllResults = async (req, res, next) => {
   try {
@@ -37,7 +36,7 @@ const deleteResultById = async (req, res, next) => {
   try {
     const id = req.params.resultId;
     const deletedResult = await ResultModel.deleteResultById(id);
-
+    console.log(deletedResult);
     if (deletedResult) {
       res.status(200).send({ payload: 'Result is deleted' });
     } else {
@@ -51,7 +50,6 @@ const deleteResultById = async (req, res, next) => {
 const findByIdAndUpdate = async (req, res, next) => {
   try {
     const id = req.params.resultId;
-    // const model = { ...req.body.recordIds };
     const { recordIds } = req.body;
     let model = {};
     recordIds ? model.recordIds = recordIds : null;
