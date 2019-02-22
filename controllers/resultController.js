@@ -50,7 +50,7 @@ const deleteResultById = async (req, res, next) => {
 const findByIdAndUpdate = async (req, res, next) => {
   try {
     const id = req.params.resultId;
-    const model = { ...req.body };
+    const model = { ...req.body.recordIds };
     const updatedResults = await ResultModel.findByIdAndUpdate(id, model);
     res.status(200).send({ payload: { updatedResults } });
   } catch (error) {
