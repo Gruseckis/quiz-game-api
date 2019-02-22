@@ -1,6 +1,6 @@
 import * as ResultModel from '../models/resultModel';
-import * as RecordModel from '../models/recordsModel';
 import AppError from '../errors/AppError';
+
 
 const getAllResults = async (req, res, next) => {
   try {
@@ -36,8 +36,9 @@ const deleteResultById = async (req, res, next) => {
   try {
     const id = req.params.resultId;
     const deletedResult = await ResultModel.deleteResultById(id);
-
     if (deletedResult) {
+      const recordIdArray = [...deletedResult.recordIds];
+      await RecordModel.deleteRecordsFromIdArray(recordIdArray)
       res.status(200).send({ payload: 'Result is deleted' });
     } else {
       throw new AppError('Result not found');
@@ -50,7 +51,9 @@ const deleteResultById = async (req, res, next) => {
 const findByIdAndUpdate = async (req, res, next) => {
   try {
     const id = req.params.resultId;
-    const model = { ...req };
+    const { recordIds } = req.body;
+    let model = {};
+    recordIds ? model.recordIds = recordIds : null;
     const updatedResults = await ResultModel.findByIdAndUpdate(id, model);
     res.status(200).send({ payload: { updatedResults } });
   } catch (error) {

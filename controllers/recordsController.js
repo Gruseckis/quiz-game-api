@@ -2,6 +2,8 @@ import AppError from '../errors/AppError';
 import * as RecordModel from '../models/recordsModel';
 import { ResultModel } from '../models/resultModel';
 import { accessLevelCheck } from '../helpers/accessLevelCheck';
+import { getQuestionByID } from '../models/questionModel';
+import { getQuizByQuestionId } from '../models/QuizModel';
 
 const getAllRecords = async (req, res) => {
   try {
@@ -30,13 +32,35 @@ const addRecord = async (req, res, next) => {
     const record = await RecordModel.save({
       questionId: req.body.questionId,
       answers: req.body.answers,
+      textAnswer: req.body.textAnswer
     });
+    const question = await getQuestionByID(req.body.questionId)
+    const correctAnswersArray = question.correct;
+    let correct = false;
+    if(arraysEqual(correctAnswersArray, req.body.answers)){
+      correct = true;
+    }
+    const quiz = await getQuizByQuestionId(req.body.questionId);
+    const quesionsArray = quiz.questions;
+    const indexOfCurrentQuestion = quesionsArray.indexOf(req.body.questionId);
+    const nextQuestionId = quesionsArray[indexOfCurrentQuestion + 1] || null;
     await ResultModel.findByIdAndUpdate(req.body.resultId, { $push: { recordIds: record.id } });
-    res.status(201).send({ payload: { message: 'Record was created', record } });
+    
+    res.status(200).send({ payload: { message: 'Saved', correct, nextQuestionId } });
   } catch (error) {
     next(new AppError(error.message, 400));
   }
 };
+
+function arraysEqual(arr1, arr2) {
+  if(arr1.length !== arr2.length)
+      return false;
+  for(let i = arr1.length; i--;) {
+      if(parseInt(arr1[i]) !== parseInt(arr2[i]))
+          return false;
+  }
+  return true;
+}
 
 const updateRecord = async (req, res, next) => {
   try {
@@ -74,6 +98,7 @@ const updateRecord = async (req, res, next) => {
 
 const deleteRecord = async (req, res, next) => {
   try {
+    await ResultModel.update(req.body.resultId, { $pull: { recordIds: req.params.recordId } });
     const remove = await RecordModel.deleteRecordById(req.params.recordId);
     if (!remove) {
       throw new AppError('Send valid recordId');
