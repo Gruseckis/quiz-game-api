@@ -13,7 +13,6 @@ import quizRoutes from './routes/quizRouter';
 
 import authRouter from './routes/authRouter';
 import mediaRoutes from './routes/mediaRouter';
-import statisticsRouter from './routes/statisticsRouter';
 import authenticate from './middlewares/authenticate';
 
 const app = express();
