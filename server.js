@@ -48,7 +48,6 @@ app.use(`/api/v${process.env.API_VERSION}/records`, authenticate, recordsRouter)
 app.use(`/api/v${process.env.API_VERSION}/media`, authenticate, mediaRoutes);
 app.use(`/api/v${process.env.API_VERSION}/quizzes`, authenticate, quizRoutes);
 app.use(`/api/v${process.env.API_VERSION}/questions`, authenticate, questionRouter);
-app.use(`/api/v${process.env.API_VERSION}/statistics`, authenticate, statisticsRouter);
 app.use(`/api/v${process.env.API_VERSION}`, index);
 
 app.use('/uploads', express.static('uploads'));
