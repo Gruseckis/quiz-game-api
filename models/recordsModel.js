@@ -30,5 +30,5 @@ export {
   updateById,
   deleteRecordById,
   getAllRecords,
-  getRecordsFromIdArray,
+  getRecordsFromIdArray
 };
