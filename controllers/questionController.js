@@ -4,16 +4,21 @@ import { QuizModel, getQuizById } from '../models/QuizModel';
 
 const addNewQuestion = async(req, res, next) => {
    try {
-      const question = await save({
-         question: req.body.question,
-         correct: req.body.correct,
-         answers: req.body.answers,
-         type: req.body.type
-      });
+      const quizValidation = await getQuizById(req.body.quizId)
       
-      await QuizModel.findByIdAndUpdate(req.body.quizId, {$push:{questions: question.id}} );
+      if (quizValidation){
+         const question = await save({
+            question: req.body.question,
+            correct: req.body.correct,
+            answers: req.body.answers,
+            type: req.body.type
+         });
+         await QuizModel.findByIdAndUpdate(req.body.quizId, {$push:{questions: question.id}} );
+         res.status(200).send({payload: question});
+         return;
+      } 
+      throw new AppError("Please provide a valid quiz ID");
       
-      res.status(200).send({payload: question})
    } catch(error) {
       next(new AppError(error.message ))
    };
@@ -48,8 +53,6 @@ const updateQuestionById = async(req, res, next) => {
 
 const deleteQuestionbyID = async(req, res, next) => {
    try {
-      let targetQuiz = await QuizModel.update({questions:{$in:[req.params.questionId]}}, {$pull: {questions: req.params.questionId}});
-
       const question = await deleteQuestionByID(req.params.questionId);
 
       if (question) 
