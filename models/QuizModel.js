@@ -16,6 +16,8 @@ const QuizModel = mongoose.model('Quiz', quizSchema);
 
 const save = async model => new QuizModel(model).save();
 
+const findQuizByQuestionId = async input => QuizModel.find(input);
+
 const getAllQuizzes = async () => QuizModel.find();
 
 const getQuizById = async _id => QuizModel.findOne({ _id });
@@ -29,6 +31,8 @@ const getQuizByQuestionId = async questionId => QuizModel.find({ questions: { $i
 const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, model, { new: true });
 
 const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
+
+export { findQuizByQuestionId, QuizModel, quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
 
 export {
   QuizModel,
@@ -45,3 +49,4 @@ export {
 QuizModel.schema
   .path('name')
   .validate(async name => !(await getQuizByName(name.toLowerCase())), 'Quiz already exists!');
+
