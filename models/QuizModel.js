@@ -16,8 +16,6 @@ const QuizModel = mongoose.model('Quiz', quizSchema);
 
 const save = async model => new QuizModel(model).save();
 
-const findQuizByQuestionId = async input => QuizModel.find(input);
-
 const getAllQuizzes = async () => QuizModel.find();
 
 const getQuizById = async _id => QuizModel.findOne({ _id });
