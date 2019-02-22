@@ -2,7 +2,6 @@ import {save, getAllQuestions, getQuestionByID, updateQuestionByID, deleteQuesti
 import AppError from '../errors/AppError';
 import { QuizModel, getQuizById } from '../models/QuizModel';
 
-
 const addNewQuestion = async(req, res, next) => {
    try {
       const quizValidation = await getQuizById(req.body.quizId)
@@ -60,6 +59,8 @@ const deleteQuestionbyID = async(req, res, next) => {
          {res.status(200).send({message: `Question was successfully deleted`}); }
       else 
          {throw new AppError("This questionId doesn't exist")}
+
+      console.log(QuizModel.getALLquestions);
    } catch(error) {
       next(new AppError(error.message ))
    };
