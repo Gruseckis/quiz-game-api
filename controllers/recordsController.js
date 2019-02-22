@@ -46,10 +46,10 @@ const updateRecord = async (req, res, next) => {
       let updatedRecord;
 
       if (body.answers) {
-        recordUpdate['answers'] = body.answers;
+        recordUpdate.answers = body.answers;
       }
       if (body.textAnswer) {
-        recordUpdate['textAnswer'] = body.textAnswer;
+        recordUpdate.textAnswer = body.textAnswer;
       }
 
       if (Object.keys(recordUpdate).length <= 0) {
