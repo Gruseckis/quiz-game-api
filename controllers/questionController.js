@@ -8,7 +8,6 @@ const addNewQuestion = async(req, res, next) => {
       const quizValidation = await getQuizById(req.body.quizId)
       
       if (quizValidation){
-         console.log('true');
          const question = await save({
             question: req.body.question,
             correct: req.body.correct,
@@ -55,8 +54,6 @@ const updateQuestionById = async(req, res, next) => {
 
 const deleteQuestionbyID = async(req, res, next) => {
    try {
-      let targetQuiz = await QuizModel.update({questions:{$in:[req.params.questionId]}}, {$pull: {questions: req.params.questionId}});
-
       const question = await deleteQuestionByID(req.params.questionId);
 
       if (question) 
