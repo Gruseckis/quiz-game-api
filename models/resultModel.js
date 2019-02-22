@@ -24,4 +24,6 @@ const findByIdAndUpdate = async (id, model) => ResultModel.findByIdAndUpdate(id,
 
 const deleteResultById = async _id => ResultModel.findByIdAndRemove(_id);
 
-export { save, getAllResults, getResultById, getAllResultsByUserId, getAllresultsByQuizId, deleteResultById, ResultModel, resultSchema, findByIdAndUpdate };
+const update = async _id => ResultModel.update(_id);
+
+export { save, getAllResults, getResultById, getAllResultsByUserId, getAllresultsByQuizId, deleteResultById, ResultModel, resultSchema, findByIdAndUpdate, update };
