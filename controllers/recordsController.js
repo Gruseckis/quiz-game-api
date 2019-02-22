@@ -42,7 +42,7 @@ const addRecord = async (req, res, next) => {
     const quiz = await getQuizByQuestionId(req.body.questionId);
     const quesionsArray = quiz.questions;
     const indexOfCurrentQuestion = quesionsArray.indexOf(req.body.questionId);
-    const nextQuestionId = quesionsArray[indexOfCurrentQuestion + 1] || [];
+    const nextQuestionId = quesionsArray[indexOfCurrentQuestion + 1] || null;
     await ResultModel.findByIdAndUpdate(req.body.resultId, { $push: { recordIds: record.id } });
     
     res.status(200).send({ payload: { message: 'Saved', correct, nextQuestionId } });
