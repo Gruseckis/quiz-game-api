@@ -41,26 +41,24 @@ const addRecord = async (req, res, next) => {
 const updateRecord = async (req, res, next) => {
   try {
     const body = { ...req.body };
-    if(accessLevelCheck(req.user.level,'moderator')){
-      const keys = Object.keys(body);
+    if (accessLevelCheck(req.user.level, 'moderator')) {
       let recordUpdate = {};
       let updatedRecord;
 
-      keys.forEach(key => {
-        if (key === 'answers' || key === 'textAnswer') {
-          if (body[key] !== null) {
-            recordUpdate[key] = body[key];
-          }
-        }
-      });
+      if (body.answers) {
+        recordUpdate['answers'] = body.answers;
+      }
+      if (body.textAnswer) {
+        recordUpdate['textAnswer'] = body.textAnswer;
+      }
 
       if (Object.keys(recordUpdate).length <= 0) {
         throw new AppError('Nothing to update');
       } else {
         updatedRecord = await RecordModel.updateById(req.params.recordId, recordUpdate);
       }
-      
-      if(!updatedRecord){
+
+      if (!updatedRecord) {
         throw new AppError("Record not found");
       }
       res.status(200).send({
