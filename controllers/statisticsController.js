@@ -41,7 +41,6 @@ const getQuizStatistics = async (req, res, next) => {
 			result.push(statistics);
 
 		})
-
 		res.status(200).send({ payload: result });
 
 	} catch(error) {
