@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import AppError from '../errors/AppError';
 import { save, getUserByUsername, comparePassword } from '../models/UserModel';
-import * as EmailValidator from 'email-validator';
+import validator from 'validator';
 const logger = require('../utils/logger')('authController');
 
 const register = async (req, res, next) => {
@@ -9,7 +9,7 @@ const register = async (req, res, next) => {
   const { body } = req;
   try {
     const { email } = req.body;
-    if (EmailValidator.validate(email)) {
+    if (validator.isEmail(email)) {
       const user = await save({
         username: body.username.toLowerCase(),
         email: body.email,
