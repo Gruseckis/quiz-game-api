@@ -24,7 +24,7 @@ const getQuizByName = async name => QuizModel.findOne({ name });
 
 const getQuizzesByOwnerId = async ownerId => QuizModel.find({ ownerId });
 
-const getQuizByQuestionId = async questionId => QuizModel.findOne({ questions: { $in: [questionId] } });
+const getQuizByQuestionId = async questionId => QuizModel.find({ questions: { $in: questionId } });
 
 const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, model, { new: true });
 

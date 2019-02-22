@@ -22,6 +22,9 @@ const getRecordsFromIdArray = async arrayId => {
   RecordModel.find({ _id: { $in: [arrayId] } });
 };
 
+const deleteRecordsFromIdArray = async arrayId =>
+  RecordModel.deleteMany({ _id: { $in: arrayId } });
+
 export {
   RecordModel,
   recordSchema,
@@ -31,4 +34,5 @@ export {
   deleteRecordById,
   getAllRecords,
   getRecordsFromIdArray,
+  deleteRecordsFromIdArray
 };
