@@ -34,15 +34,33 @@ const updateOneUser = async (req, res, next) => {
   try {
     const id = req.params.userId;
     if (accessLevelCheck(req.user.level, 'admin')) {
-      const updatedUser = await updateUser(id, { ...req.body });
-      if (updatedUser) {
-        res.status(200).send({
-          payload: updatedUser
-        });
-        return;
-      } else {
-        throw new AppError('User not found');
+      const {
+        level,
+        hashedPassword,
+        name,
+        surname,
+        email,
+        dateOfBirth
+      } = req.body;
+      let userUpdate = {};
+      if (hashedPassword) {
+        const reshedPassword = await bcrypt.hash(
+          hashedPassword,
+          parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10)
+        );
+        userUpdate.hashedPassword = reshedPassword;
       }
+      level ? (userUpdate.level = level) : null;
+      name ? (userUpdate.name = name) : null;
+      surname ? (userUpdate.surname = surname) : null;
+      email ? (userUpdate.email = email) : null;
+      dateOfBirth ? (userUpdate.dateOfBirth = dateOfBirth) : null;
+
+      const updatedUser = await updateUser(id, userUpdate);
+      res.status(200).send({
+        payload: updatedUser
+      });
+      return;
     }
 
     if (req.user.id === id) {
