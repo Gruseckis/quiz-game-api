@@ -2,11 +2,13 @@ import mongoose from 'mongoose';
 
 const resultSchema = new mongoose.Schema({
     recordIds: [{ type: String, unique: true, required: true }],
-    userId: { type: String, unique: true, required: true },
-    quizId: { type: String, unique: true, required: true },
+    userId: { type: String, unique: false, required: true },
+    quizId: { type: String, unique: false, required: true },
 },
     { timestamps: true },
 );
+resultSchema.index({ userId: 1, quizId: 1 }, { unique: true });
+
 
 const ResultModel = mongoose.model('Result', resultSchema);
 
