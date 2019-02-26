@@ -1,7 +1,6 @@
 import * as ResultModel from '../models/resultModel';
 import AppError from '../errors/AppError';
 
-
 const getAllResults = async (req, res, next) => {
   try {
     const results = await ResultModel.getAllResults();
@@ -38,7 +37,7 @@ const deleteResultById = async (req, res, next) => {
     const deletedResult = await ResultModel.deleteResultById(id);
     if (deletedResult) {
       const recordIdArray = [...deletedResult.recordIds];
-      await RecordModel.deleteRecordsFromIdArray(recordIdArray)
+      await RecordModel.deleteRecordsFromIdArray(recordIdArray);
       res.status(200).send({ payload: 'Result is deleted' });
     } else {
       throw new AppError('Result not found');
@@ -48,12 +47,12 @@ const deleteResultById = async (req, res, next) => {
   }
 };
 
-const findByIdAndUpdate = async (req, res, next) => {
+const updateResultById = async (req, res, next) => {
   try {
     const id = req.params.resultId;
     const { recordIds } = req.body;
     let model = {};
-    recordIds ? model.recordIds = recordIds : null;
+    recordIds ? (model.recordIds = recordIds) : null;
     const updatedResults = await ResultModel.findByIdAndUpdate(id, model);
     res.status(200).send({ payload: { updatedResults } });
   } catch (error) {
@@ -61,4 +60,4 @@ const findByIdAndUpdate = async (req, res, next) => {
   }
 };
 
-export { getAllResults, getResultById, addResults, deleteResultById, findByIdAndUpdate };
+export { getAllResults, getResultById, addResults, deleteResultById, updateResultById };
