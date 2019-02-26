@@ -5,6 +5,14 @@ import { accessLevelCheck } from '../helpers/accessLevelCheck';
 import { getQuestionByID } from '../models/questionModel';
 import { getQuizByQuestionId } from '../models/QuizModel';
 
+function arraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = arr1.length; i--; ) {
+    if (parseInt(arr1[i]) !== parseInt(arr2[i])) return false;
+  }
+  return true;
+}
+
 const getAllRecords = async (req, res) => {
   try {
     const record = await RecordModel.getAllRecords();
@@ -32,12 +40,12 @@ const addRecord = async (req, res, next) => {
     const record = await RecordModel.save({
       questionId: req.body.questionId,
       answers: req.body.answers,
-      textAnswer: req.body.textAnswer
+      textAnswer: req.body.textAnswer,
     });
-    const question = await getQuestionByID(req.body.questionId)
+    const question = await getQuestionByID(req.body.questionId);
     const correctAnswersArray = question.correct;
     let correct = false;
-    if(arraysEqual(correctAnswersArray, req.body.answers)){
+    if (arraysEqual(correctAnswersArray, req.body.answers)) {
       correct = true;
     }
     const quiz = await getQuizByQuestionId(req.body.questionId);
@@ -45,24 +53,14 @@ const addRecord = async (req, res, next) => {
     const indexOfCurrentQuestion = quesionsArray.indexOf(req.body.questionId);
     const nextQuestionId = quesionsArray[indexOfCurrentQuestion + 1] || null;
     await ResultModel.findByIdAndUpdate(req.body.resultId, { $push: { recordIds: record.id } });
-    
+
     res.status(200).send({ payload: { message: 'Saved', correct, nextQuestionId } });
   } catch (error) {
     next(new AppError(error.message, 400));
   }
 };
 
-function arraysEqual(arr1, arr2) {
-  if(arr1.length !== arr2.length)
-      return false;
-  for(let i = arr1.length; i--;) {
-      if(parseInt(arr1[i]) !== parseInt(arr2[i]))
-          return false;
-  }
-  return true;
-}
-
-const updateRecord = async (req, res, next) => {
+const updateRecordById = async (req, res, next) => {
   try {
     const body = { ...req.body };
     if (accessLevelCheck(req.user.level, 'moderator')) {
@@ -83,10 +81,10 @@ const updateRecord = async (req, res, next) => {
       }
 
       if (!updatedRecord) {
-        throw new AppError("Record not found");
+        throw new AppError('Record not found');
       }
       res.status(200).send({
-        payload: updatedRecord
+        payload: updatedRecord,
       });
     } else {
       throw new AppError('Only moderator or admin can update record');
@@ -96,7 +94,7 @@ const updateRecord = async (req, res, next) => {
   }
 };
 
-const deleteRecord = async (req, res, next) => {
+const deleteRecordById = async (req, res, next) => {
   try {
     await ResultModel.update(req.body.resultId, { $pull: { recordIds: req.params.recordId } });
     const remove = await RecordModel.deleteRecordById(req.params.recordId);
@@ -109,4 +107,4 @@ const deleteRecord = async (req, res, next) => {
   }
 };
 
-export { getRecordById, getAllRecords, addRecord, deleteRecord, updateRecord };
+export { getRecordById, getAllRecords, addRecord, deleteRecordById, updateRecordById };

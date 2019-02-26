@@ -10,8 +10,8 @@ const getUserInfo = async (req, res) => {
   const { user } = req;
   res.status(200).send({
     payload: {
-      user
-    }
+      user,
+    },
   });
 };
 
@@ -20,7 +20,7 @@ const getAllUsers = async (req, res, next) => {
     if (accessLevelCheck(req.user.level, 'admin')) {
       const users = await getUsers();
       res.status(200).send({
-        payload: users
+        payload: users,
       });
     } else {
       throw new AppError('Only admin can get all the users');
@@ -30,24 +30,14 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-const updateOneUser = async (req, res, next) => {
+const updateUserById = async (req, res, next) => {
   try {
     const id = req.params.userId;
     if (accessLevelCheck(req.user.level, 'admin')) {
-      const {
-        level,
-        hashedPassword,
-        name,
-        surname,
-        email,
-        dateOfBirth
-      } = req.body;
+      const { level, hashedPassword, name, surname, email, dateOfBirth } = req.body;
       let userUpdate = {};
       if (hashedPassword) {
-        const reshedPassword = await bcrypt.hash(
-          hashedPassword,
-          parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10)
-        );
+        const reshedPassword = await bcrypt.hash(hashedPassword, parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10));
         userUpdate.hashedPassword = reshedPassword;
       }
       level ? (userUpdate.level = level) : null;
@@ -58,7 +48,7 @@ const updateOneUser = async (req, res, next) => {
 
       const updatedUser = await updateUser(id, userUpdate);
       res.status(200).send({
-        payload: updatedUser
+        payload: updatedUser,
       });
       return;
     }
@@ -68,10 +58,7 @@ const updateOneUser = async (req, res, next) => {
       let userUpdate = {};
 
       if (hashedPassword) {
-        const reshedPassword = await bcrypt.hash(
-          hashedPassword,
-          parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10)
-        );
+        const reshedPassword = await bcrypt.hash(hashedPassword, parseInt(process.env.PASSWORD_HASHING_ROUNDS, 10));
         userUpdate.hashedPassword = reshedPassword;
       }
       name ? (userUpdate.name = name) : null;
@@ -81,7 +68,7 @@ const updateOneUser = async (req, res, next) => {
 
       const updatedUser = await updateUser(id, userUpdate);
       res.status(200).send({
-        payload: updatedUser
+        payload: updatedUser,
       });
     } else {
       throw new AppError('User can only change onw data');
@@ -92,7 +79,7 @@ const updateOneUser = async (req, res, next) => {
   }
 };
 
-const deleteOneUser = async (req, res, next) => {
+const deleteUserById = async (req, res, next) => {
   try {
     const id = req.params.userId;
     if (accessLevelCheck(req.user.level, 'admin')) {
@@ -100,8 +87,8 @@ const deleteOneUser = async (req, res, next) => {
       if (deletedUser) {
         res.status(200).send({
           payload: {
-            message: 'User deleted'
-          }
+            message: 'User deleted',
+          },
         });
       } else {
         throw new AppError('user not found');
@@ -114,4 +101,4 @@ const deleteOneUser = async (req, res, next) => {
   }
 };
 
-export { getUserInfo, getAllUsers, updateOneUser, deleteOneUser };
+export { getUserInfo, getAllUsers, updateUserById, deleteUserById };

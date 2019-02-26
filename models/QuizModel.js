@@ -30,11 +30,6 @@ const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, mode
 
 const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 
-
-export { QuizModel, quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
-
-export { findQuizByQuestionId, QuizModel, quizSchema, save, getAllQuizzes, getQuizById, getQuizzesByOwnerId, updateQuizById, deleteQuizById };
-
 export {
   QuizModel,
   quizSchema,
@@ -50,5 +45,3 @@ export {
 QuizModel.schema
   .path('name')
   .validate(async name => !(await getQuizByName(name.toLowerCase())), 'Quiz already exists!');
-
-
