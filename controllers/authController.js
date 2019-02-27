@@ -17,10 +17,10 @@ const register = async (req, res, next) => {
         hashedPassword: body.hashedPassword,
         name: body.name,
         surname: body.surname,
-        dateOfBirth: body.dateOfBirth
+        dateOfBirth: body.dateOfBirth,
       });
       logger.log('info', `Successfully registered: ${body.username}`);
-      res.status(200).send({ payload: { user } });
+      res.status(200).send({ payload: { message: 'Successfully registered', user } });
       return;
     }
 
@@ -40,7 +40,7 @@ const login = async (req, res, next) => {
     }
     const isPasswordsEqual = await comparePassword({
       userPassword: req.body.hashedPassword,
-      hashedPassword: user.hashedPassword
+      hashedPassword: user.hashedPassword,
     });
     if (isPasswordsEqual) {
       const token = jwt.sign(
@@ -53,25 +53,19 @@ const login = async (req, res, next) => {
             dateOfBirth: user.dateOfBirth,
             level: user.level,
             createdAt: user.createdAt,
-            updatedAt: user.updatedAt
-          }
+            updatedAt: user.updatedAt,
+          },
         },
         process.env.JWT_SECRET,
         { expiresIn: '6h' }
       );
       logger.log('info', `Successfully loged in: ${user.username}`);
-      res
-        .status(200)
-        .send({ payload: { message: 'Successfully loged in', token } });
+      res.status(200).send({ payload: { message: 'Successfully loged in', token } });
     } else {
       throw new AppError('Wrong user credentials!', 400);
     }
   } catch (error) {
-    next(
-      error instanceof AppError
-        ? error
-        : new AppError('Wrong user credentials!', 400)
-    );
+    next(error instanceof AppError ? error : new AppError('Wrong user credentials!', 400));
   }
 };
 
