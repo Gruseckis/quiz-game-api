@@ -12,7 +12,7 @@ describe('IndexController', () => {
       const req = sinon.stub();
       indexController(req, res);
       expect(res.status).to.be.calledWith(200);
-      expect(send.send).to.be.calledWith({ message: 'Quiz-game API' });
+      expect(send.send).to.be.calledWith({ payload: { message: 'Quiz-game API' } });
       expect(req).to.have.not.been.calledOnce;
     });
   });

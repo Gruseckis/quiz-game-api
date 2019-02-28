@@ -4,7 +4,7 @@ import AppError from '../errors/AppError';
 const getAllResults = async (req, res, next) => {
   try {
     const results = await ResultModel.getAllResults();
-    res.status(200).send({ payload: results || [] });
+    res.status(200).send({ payload: { results: results || [] } });
   } catch (error) {
     next(new AppError(error.message));
   }
@@ -13,7 +13,7 @@ const getAllResults = async (req, res, next) => {
 const getResultById = async (req, res, next) => {
   try {
     const resultById = await ResultModel.getResultById(req.params.resultId);
-    res.status(200).send({ payload: resultById });
+    res.status(200).send({ payload: { result: resultById } });
   } catch (error) {
     next(new AppError(error.message));
   }
@@ -38,7 +38,7 @@ const deleteResultById = async (req, res, next) => {
     if (deletedResult) {
       const recordIdArray = [...deletedResult.recordIds];
       await RecordModel.deleteRecordsFromIdArray(recordIdArray);
-      res.status(200).send({ payload: 'Result is deleted' });
+      res.status(200).send({ payload: { message: 'Result is deleted' } });
     } else {
       throw new AppError('Result not found');
     }
@@ -54,7 +54,7 @@ const updateResultById = async (req, res, next) => {
     let model = {};
     recordIds ? (model.recordIds = recordIds) : null;
     const updatedResults = await ResultModel.findByIdAndUpdate(id, model);
-    res.status(200).send({ payload: { updatedResults } });
+    res.status(200).send({ payload: { result: updatedResults } });
   } catch (error) {
     next(new AppError(error.message));
   }

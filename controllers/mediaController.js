@@ -5,31 +5,33 @@ import path from 'path';
 
 const addMedia = async (req, res, next) => {
   const { user } = req;
-  const { file: { filename } } = req;
+  const {
+    file: { filename },
+  } = req;
   try {
     const media = await MediaModel.save({
       userId: user.id,
-      path: `/${process.env.IMAGE_UPLOAD_FOLDER}/${filename}`
+      path: `/${process.env.IMAGE_UPLOAD_FOLDER}/${filename}`,
     });
     res.status(200).send({
       payload: {
         mediaId: media.id,
         path: media.path,
-      }
+      },
     });
   } catch (error) {
     next(new AppError(error.message));
   }
-}
+};
 
 const getMediaById = async (req, res, next) => {
   try {
     const media = await MediaModel.getMediaById(req.params.mediaId);
-    res.status(200).send({ payload: media });
+    res.status(200).send({ payload: { media } });
   } catch (error) {
     next(new AppError(error.message));
   }
-}
+};
 
 const deleteMediaById = async (req, res, next) => {
   try {
@@ -40,6 +42,6 @@ const deleteMediaById = async (req, res, next) => {
   } catch (error) {
     next(new AppError(error.message));
   }
-}
+};
 
 export { addMedia, getMediaById, deleteMediaById };
