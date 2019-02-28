@@ -2,11 +2,13 @@ import mongoose from 'mongoose';
 
 const resultSchema = new mongoose.Schema({
     recordIds: [{ type: String, unique: true, required: true }],
-    userId: { type: String, unique: true, required: true },
-    quizId: { type: String, unique: true, required: true },
+    userId: { type: String, unique: false, required: true },
+    quizId: { type: String, unique: false, required: true },
 },
     { timestamps: true },
 );
+resultSchema.index({ userId: 1, quizId: 1 }, { unique: true });
+
 
 const ResultModel = mongoose.model('Result', resultSchema);
 
@@ -24,4 +26,6 @@ const findByIdAndUpdate = async (id, model) => ResultModel.findByIdAndUpdate(id,
 
 const deleteResultById = async _id => ResultModel.findByIdAndRemove(_id);
 
-export { save, getAllResults, getResultById, getAllResultsByUserId, getAllresultsByQuizId, deleteResultById, ResultModel, resultSchema, findByIdAndUpdate };
+const update = async _id => ResultModel.update(_id);
+
+export { save, getAllResults, getResultById, getAllResultsByUserId, getAllresultsByQuizId, deleteResultById, ResultModel, resultSchema, findByIdAndUpdate, update };
