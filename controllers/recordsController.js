@@ -15,8 +15,8 @@ function arraysEqual(arr1, arr2) {
 
 const getAllRecords = async (req, res) => {
   try {
-    const record = await RecordModel.getAllRecords();
-    res.status(200).send({ payload: record });
+    const records = await RecordModel.getAllRecords();
+    res.status(200).send({ payload: { records } });
   } catch (error) {
     next(new AppError(error.message));
   }
@@ -26,7 +26,7 @@ const getRecordById = async (req, res, next) => {
   try {
     const record = await RecordModel.getRecordById(req.params.recordId);
     if (record) {
-      res.status(200).send({ payload: record });
+      res.status(200).send({ payload: { record } });
     } else {
       throw new AppError('Invalid Id');
     }
@@ -83,9 +83,7 @@ const updateRecordById = async (req, res, next) => {
       if (!updatedRecord) {
         throw new AppError('Record not found');
       }
-      res.status(200).send({
-        payload: updatedRecord,
-      });
+      res.status(200).send({ payload: { record: updatedRecord } });
     } else {
       throw new AppError('Only moderator or admin can update record');
     }

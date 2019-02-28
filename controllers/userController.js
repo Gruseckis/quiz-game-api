@@ -20,7 +20,7 @@ const getAllUsers = async (req, res, next) => {
     if (accessLevelCheck(req.user.level, 'admin')) {
       const users = await getUsers();
       res.status(200).send({
-        payload: users,
+        payload: { users },
       });
     } else {
       throw new AppError('Only admin can get all the users');
@@ -48,7 +48,7 @@ const updateUserById = async (req, res, next) => {
 
       const updatedUser = await updateUser(id, userUpdate);
       res.status(200).send({
-        payload: updatedUser,
+        payload: { user: updatedUser },
       });
       return;
     }
@@ -68,8 +68,9 @@ const updateUserById = async (req, res, next) => {
 
       const updatedUser = await updateUser(id, userUpdate);
       res.status(200).send({
-        payload: updatedUser,
+        payload: { user: updatedUser },
       });
+      return;
     } else {
       throw new AppError('User can only change onw data');
     }
