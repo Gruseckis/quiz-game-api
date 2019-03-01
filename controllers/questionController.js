@@ -5,7 +5,6 @@ import { QuizModel, getQuizById } from '../models/QuizModel';
 const addNewQuestion = async (req, res, next) => {
   try {
     const quizValidation = await getQuizById(req.body.quizId);
-
     if (quizValidation) {
       const question = await questionModel.save({
         question: req.body.question,
