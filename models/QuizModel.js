@@ -18,7 +18,7 @@ const save = async model => new QuizModel(model).save();
 
 const getAllQuizzes = async () => QuizModel.find();
 
-const getQuizById = async _id => QuizModel.findOne({ _id });
+const getQuizById = async _id => QuizModel.findById(_id);
 
 const getQuizByName = async name => QuizModel.findOne({ name });
 
