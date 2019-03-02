@@ -7,6 +7,9 @@ import jwt from 'jsonwebtoken';
 require('dotenv').config();
 
 describe('AuthController', () => {
+  afterEach(() => {
+    sinon.restore();
+  });
   describe('.register(req, res, next)', () => {
     const validRegBody = {
       username: 'Username',
@@ -27,7 +30,7 @@ describe('AuthController', () => {
       const saveUser = sinon.stub(UserModel, 'save').resolves(user);
       const next = sinon.stub();
       await register(req, res, next);
-      expect(res.status).to.be.calledWith(200);
+      expect(res.status).to.be.calledWith(201);
       expect(saveUser).to.be.calledWith({
         username: req.body.username.toLowerCase(),
         email: req.body.email,
@@ -38,7 +41,6 @@ describe('AuthController', () => {
       });
       expect(resSend.send).to.be.calledWith({ payload: { message: 'Successfully registered', user } });
       expect(next).to.be.not.calledOnce;
-      sinon.restore();
     });
     it('throws and error when email is invalid', async () => {
       const req = {
@@ -55,7 +57,6 @@ describe('AuthController', () => {
       expect(next).to.be.calledOnce;
       expect(next.args[0][0]).to.be.instanceOf(AppError);
       expect(next.args[0][0].status).to.be.equal(400);
-      sinon.restore();
     });
     it("unsucessfully registered, can't save", async () => {
       const req = {
@@ -72,7 +73,6 @@ describe('AuthController', () => {
       expect(next).to.be.calledOnce;
       expect(next.args[0][0]).to.be.instanceOf(AppError);
       expect(next.args[0][0].status).to.be.equal(400);
-      sinon.restore();
     });
   });
   describe('.login(req, res, next)', () => {
@@ -126,7 +126,6 @@ describe('AuthController', () => {
       );
       expect(res.status).to.be.calledWith(200);
       expect(resSend.send).to.be.calledWith({ payload: { message: 'Successfully loged in', token: jwtToken } });
-      sinon.restore();
     });
     it('unsuccessfully logged in, username incorrect', async () => {
       const resSend = { send: sinon.stub() };
@@ -148,7 +147,6 @@ describe('AuthController', () => {
       expect(next).to.be.calledOnce;
       expect(next.args[0][0]).to.be.instanceOf(AppError);
       expect(next.args[0][0].status).to.be.equal(400);
-      sinon.restore();
     });
     it('unsuccessfully logged in, username password', async () => {
       const req = {
@@ -174,7 +172,6 @@ describe('AuthController', () => {
       expect(next).to.be.calledOnce;
       expect(next.args[0][0]).to.be.instanceOf(AppError);
       expect(next.args[0][0].status).to.be.equal(400);
-      sinon.restore();
     });
     it('unsuccessfully logged in, database error', async () => {
       const req = {
@@ -196,7 +193,6 @@ describe('AuthController', () => {
       expect(next).to.be.calledOnce;
       expect(next.args[0][0]).to.be.instanceOf(AppError);
       expect(next.args[0][0].status).to.be.equal(400);
-      sinon.restore();
     });
   });
 });
