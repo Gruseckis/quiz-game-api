@@ -12,7 +12,6 @@ import {
 
 describe('UserModel', async () => {
   it('userSchema correct', async () => {
-    console.log(userSchema);
     expect(userSchema.options.timestamps).to.be.equal(true);
     expect(userSchema.obj).to.have.keys({
       username: { type: String, trim: true, unique: true, required: true },
@@ -94,7 +93,6 @@ describe('UserModel', async () => {
     };
     const confirmResult = await comparePassword(equalPassword);
     const notConfirmedResult = await comparePassword(notEqualPassword);
-    comparePassword();
     expect(confirmResult).to.be.equal(true);
     expect(notConfirmedResult).to.be.equal(false);
   });
