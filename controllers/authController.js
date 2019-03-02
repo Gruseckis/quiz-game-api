@@ -20,7 +20,7 @@ const register = async (req, res, next) => {
         dateOfBirth: body.dateOfBirth,
       });
       logger.log('info', `Successfully registered: ${body.username}`);
-      res.status(200).send({ payload: { message: 'Successfully registered', user } });
+      res.status(201).send({ payload: { message: 'Successfully registered', user } });
       return;
     }
 
