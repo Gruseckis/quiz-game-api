@@ -6,13 +6,13 @@ import bcrypt from 'bcrypt';
 
 describe('UserController', () => {
   let resSend, res, next;
-  afterEach(() => {
-    sinon.restore();
-  });
   beforeEach(() => {
     resSend = { send: sinon.stub() };
     res = { status: sinon.stub().returns(resSend) };
     next = sinon.stub();
+  });
+  afterEach(() => {
+    sinon.restore();
   });
   describe('.getUserInfo(req, res)', () => {
     it('return 200 and user', async () => {
