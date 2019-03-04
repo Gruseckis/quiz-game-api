@@ -63,7 +63,7 @@ const updateQuiz = async (req, res, next) => {
 
 const deleteQuiz = async (req, res, next) => {
   try {
-    const checkIfOwner = await isOwner(req.params.quizId, req.user._id);
+    const checkIfOwner = await isOwner(req.params.quizId, req.user.id);
     if (checkIfOwner || accessLevelCheck(req.user.level, 'moderator')) {
       const result = await QuizModel.deleteQuizById(req.params.quizId);
       if (!result) {
