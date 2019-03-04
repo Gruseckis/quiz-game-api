@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-expressions */
 import * as QuizModel from '../../models/QuizModel';
-import { getQuizzes, addQuiz, isOwner } from '../../controllers/quizController';
+import { getQuizzes, addQuiz, updateQuiz, getQuizById, deleteQuiz } from '../../controllers/quizController';
 import AppError from '../../errors/AppError';
+import * as levelHelper from '../../helpers/accessLevelCheck';
 
 describe('QuizController', () => {
   let resSend, res, next;
@@ -70,40 +71,221 @@ describe('QuizController', () => {
       expect(next.args[0][0].status).to.be.equal(500);
     });
   });
-  describe('.updateQuiz(req, res, next)', () => {
-    it('successfully update own quiz', async () => {});
-  });
-  describe('.isOwner(quizId, userId)', () => {
-    const userId = 'id';
-    const quizId = 'quizID';
-    it('return true if owner', async () => {
-      const quiz = { ownerId: 'id' };
-      const getQuizById = sinon.stub(QuizModel, 'getQuizById').resolves(quiz);
-      const isOwnerTrue = await isOwner(quizId, userId);
-      expect(getQuizById).to.be.calledOnce;
-      expect(isOwnerTrue).to.be.equal(true);
+  describe('.getQuizById(req, res, next)', () => {
+    it('successfully get quiz and return status 200', async () => {
+      const req = {
+        params: { quizId: 'Quiz Id' },
+      };
+      const quiz = {};
+      const getOneQuizById = sinon.stub(QuizModel, 'getQuizById').resolves(quiz);
+      await getQuizById(req, res, next);
+      expect(next).to.be.not.calledOnce;
+      expect(getOneQuizById).to.be.calledOnce;
+      expect(getOneQuizById).to.be.calledWith(req.params.quizId);
+      expect(res.status).to.be.calledWith(200);
+      expect(resSend.send).to.be.calledWith({ payload: { quiz } });
     });
-    it('returns false if not owner', async () => {
-      const quiz = { ownerId: 'notSameId' };
-      const getQuizById = sinon.stub(QuizModel, 'getQuizById').resolves(quiz);
-      const isOwnerFalse = await isOwner(quizId, userId);
-      expect(getQuizById).to.be.calledOnce;
-      expect(isOwnerFalse).to.be.equal(false);
-    });
-    it('returns error when get database error', async () => {
-      const error = { name: 'database error' };
-      const getQuizById = sinon.stub(QuizModel, 'getQuizById').rejects(error);
-      const isOwnerError = await isOwner(quizId, userId);
-      expect(getQuizById).to.be.calledOnce;
-      expect(isOwnerError).to.be.instanceOf(AppError);
-      expect(isOwnerError.status).to.be.equal(500);
-    });
-    it('returns error if no quiz is in database', async () => {
+    it('unsuccessfull nothing in database', async () => {
+      const req = {
+        params: { quizId: 'Quiz Id' },
+      };
       const quiz = null;
-      const getQuizById = sinon.stub(QuizModel, 'getQuizById').resolves(quiz);
-      const isOwnerError = await isOwner(quizId, userId);
-      expect(getQuizById).to.be.calledOnce;
-      expect(isOwnerError).to.be.instanceOf(AppError);
+      const getOneQuizById = sinon.stub(QuizModel, 'getQuizById').resolves(quiz);
+      await getQuizById(req, res, next);
+      expect(getOneQuizById).to.be.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+      expect(next.args[0][0].status).to.be.equal(500);
     });
+    it('unsuccessfull database error', async () => {
+      const req = {
+        params: { quizId: 'Quiz Id' },
+      };
+      const getOneQuizById = sinon.stub(QuizModel, 'getQuizById').rejects();
+      await getQuizById(req, res, next);
+      expect(getOneQuizById).to.be.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+      expect(next.args[0][0].status).to.be.equal(500);
+    });
+  });
+  describe('.updateQuiz(req, res, next)', () => {
+    it('successfully update own quiz', async () => {
+      const req = {
+        params: { quizId: 'Quiz Id' },
+        user: { id: 'id' },
+        body: { name: 'name', description: 'description' },
+      };
+      const updatedQuiz = {};
+      const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(false);
+      const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(true);
+      const updateOneQuiz = sinon.stub(QuizModel, 'updateQuizById').resolves(updatedQuiz);
+      await updateQuiz(req, res, next);
+      expect(levelChecker).to.be.not.calledOnce;
+      expect(isOwnerCheck).to.be.calledOnce;
+      expect(updateOneQuiz).to.be.calledOnce;
+      expect(next).to.be.not.calledOnce;
+      expect(res.status).to.be.calledWith(200);
+      expect(resSend.send).to.be.calledWith({ payload: { quiz: updatedQuiz } });
+    });
+    it('successfully update if moderator or higher', async () => {
+      const req = {
+        params: {},
+        user: { id: 'id' },
+        body: { name: 'name', description: 'description' },
+      };
+      const updatedQuiz = {};
+      const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(true);
+      const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(false);
+      const updateOneQuiz = sinon.stub(QuizModel, 'updateQuizById').resolves(updatedQuiz);
+      await updateQuiz(req, res, next);
+      expect(levelChecker).to.be.calledOnce;
+      expect(isOwnerCheck).to.be.calledOnce;
+      expect(updateOneQuiz).to.be.calledOnce;
+      expect(next).to.be.not.calledOnce;
+      expect(res.status).to.be.calledWith(200);
+      expect(resSend.send).to.be.calledWith({ payload: { quiz: updatedQuiz } });
+    });
+    it('unsuccessfull not moderator or owner', async () => {
+      const req = {
+        params: {},
+        user: { id: 'id' },
+        body: { name: 'name', description: 'description' },
+      };
+      const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(false);
+      const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(false);
+      const updateOneQuiz = sinon.stub(QuizModel, 'updateQuizById').rejects();
+      await updateQuiz(req, res, next);
+      expect(isOwnerCheck).to.be.calledOnce;
+      expect(levelChecker).to.be.calledOnce;
+      expect(updateOneQuiz).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+    });
+    it('unsuccessfull database error', async () => {
+      const req = {
+        params: {},
+        user: { id: 'id' },
+        body: { name: 'name', description: 'description' },
+      };
+      const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(true);
+      const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(false);
+      const updateOneQuiz = sinon.stub(QuizModel, 'updateQuizById').rejects();
+      await updateQuiz(req, res, next);
+      expect(isOwnerCheck).to.be.calledOnce;
+      expect(levelChecker).to.be.calledOnce;
+      expect(updateOneQuiz).to.be.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+    });
+    it('unssuccessfull no quiz in database', async () => {
+      const req = {
+        params: {},
+        user: { id: 'id' },
+        body: { name: 'name', description: 'description' },
+      };
+      const updatedQuiz = null;
+      const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(false);
+      const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(true);
+      const updateOneQuiz = sinon.stub(QuizModel, 'updateQuizById').resolves(updatedQuiz);
+      await updateQuiz(req, res, next);
+      expect(levelChecker).to.be.not.calledOnce;
+      expect(isOwnerCheck).to.be.calledOnce;
+      expect(updateOneQuiz).to.be.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+    });
+  });
+  describe('.deleteQuiz(req, res, next)', () => {
+    it('successfully delete own quiz', async () => {
+      const req = {
+        params: { quizId: 'Quiz id' },
+        user: { id: 'id' },
+      };
+      const deletedRecord = {};
+      const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(false);
+      const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(true);
+      const deleteQuizById = sinon.stub(QuizModel, 'deleteQuizById').resolves(deletedRecord);
+      await deleteQuiz(req, res, next);
+      expect(isOwnerCheck).to.be.calledOnce;
+      expect(levelChecker).to.be.not.calledOnce;
+      expect(deleteQuizById).to.be.calledOnce;
+      expect(deleteQuizById).to.be.calledWith(req.params.quizId);
+      expect(next).to.be.not.calledOnce;
+      expect(res.status).to.be.calledWith(200);
+      expect(resSend.send).to.be.calledWith({ payload: { message: 'Successfully deleted quiz' } });
+    });
+    it('successfully delete if moderator', async () => {
+      const req = {
+        params: { quizId: 'Quiz id' },
+        user: { id: 'id' },
+      };
+      const deletedRecord = {};
+      const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(true);
+      const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(false);
+      const deleteQuizById = sinon.stub(QuizModel, 'deleteQuizById').resolves(deletedRecord);
+      await deleteQuiz(req, res, next);
+      expect(isOwnerCheck).to.be.calledOnce;
+      expect(levelChecker).to.be.calledOnce;
+      expect(deleteQuizById).to.be.calledOnce;
+      expect(deleteQuizById).to.be.calledWith(req.params.quizId);
+      expect(next).to.be.not.calledOnce;
+      expect(res.status).to.be.calledWith(200);
+      expect(resSend.send).to.be.calledWith({ payload: { message: 'Successfully deleted quiz' } });
+    });
+  });
+  it('unsuccessfull not owner or admin', async () => {
+    const req = {
+      params: { quizId: 'Quiz id' },
+      user: { id: 'id' },
+    };
+    const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(false);
+    const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(false);
+    const deleteQuizById = sinon.stub(QuizModel, 'deleteQuizById');
+    await deleteQuiz(req, res, next);
+    expect(isOwnerCheck).to.be.calledOnce;
+    expect(levelChecker).to.be.calledOnce;
+    expect(deleteQuizById).to.be.not.calledOnce;
+    expect(res.status).to.be.not.calledOnce;
+    expect(next).to.be.calledOnce;
+    expect(next.args[0][0]).to.be.instanceOf(AppError);
+  });
+  it('unsuccessfull incorerct quizId', async () => {
+    const req = {
+      params: { quizId: 'Quiz id' },
+      user: { id: 'id' },
+    };
+    const deletedRecord = null;
+    const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(false);
+    const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(true);
+    const deleteQuizById = sinon.stub(QuizModel, 'deleteQuizById').resolves(deletedRecord);
+    await deleteQuiz(req, res, next);
+    expect(levelChecker).to.be.not.calledOnce;
+    expect(isOwnerCheck).to.be.calledOnce;
+    expect(deleteQuizById).to.be.calledOnce;
+    expect(res.status).to.be.not.calledOnce;
+    expect(next).to.be.calledOnce;
+    expect(next.args[0][0]).to.be.instanceOf(AppError);
+  });
+  it('unsuccessfull database error', async () => {
+    const req = {
+      params: { quizId: 'Quiz id' },
+      user: { id: 'id' },
+    };
+    const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(true);
+    const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(true);
+    const deleteQuizById = sinon.stub(QuizModel, 'deleteQuizById').rejects();
+    await deleteQuiz(req, res, next);
+    expect(isOwnerCheck).to.be.calledOnce;
+    expect(levelChecker).to.be.not.calledOnce;
+    expect(deleteQuizById).to.be.calledOnce;
+    expect(res.status).to.be.not.calledOnce;
+    expect(next).to.be.calledOnce;
+    expect(next.args[0][0]).to.be.instanceOf(AppError);
   });
 });
