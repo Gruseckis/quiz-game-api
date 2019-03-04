@@ -1,6 +1,6 @@
 import * as QuizModel from '../models/QuizModel';
 import AppError from '../errors/AppError';
-import { accessLevelCheck } from '../helpers/accessLevelCheck';
+import { accessLevelCheck, isOwner } from '../helpers/accessLevelCheck';
 
 const getQuizzes = async (req, res, next) => {
   try {
@@ -19,7 +19,7 @@ const addQuiz = async (req, res, next) => {
       name: req.body.name,
       description: req.body.description,
     });
-    res.status(200).send({ payload: { quiz } });
+    res.status(201).send({ payload: { quiz } });
   } catch (error) {
     next(new AppError(error.message));
   }
@@ -39,30 +39,18 @@ const getQuizById = async (req, res, next) => {
 
 const updateQuiz = async (req, res, next) => {
   try {
-    const body = { ...req.body };
-    const checkIfOwner = await isOwner(req.params.quizId, req.user._id);
+    const checkIfOwner = await isOwner(req.params.quizId, req.user.id);
     if (checkIfOwner || accessLevelCheck(req.user.level, 'moderator')) {
-      // TODO: Refator Object keys
-      const keys = Object.keys(body);
+      const { name, description } = req.body;
       let quizUpdate = {};
-      let updatedQuiz;
 
-      keys.forEach(key => {
-        if (key === 'name' || key === 'description') {
-          if (body[key] !== null) {
-            quizUpdate[key] = body[key];
-          }
-        }
-      });
+      name ? (quizUpdate.name = name) : null;
+      description ? (quizUpdate.description = description) : null;
 
-      if (Object.keys(quizUpdate).length <= 0) {
-        throw new AppError('Nothing to update');
-      } else {
-        updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, quizUpdate);
-      }
+      const updatedQuiz = await QuizModel.updateQuizById(req.params.quizId, quizUpdate);
 
       if (!updatedQuiz) {
-        throw new AppError('Quiz not found');
+        throw new AppError('No quiz found in database');
       }
       res.status(200).send({ payload: { quiz: updatedQuiz } });
     } else {
@@ -75,7 +63,7 @@ const updateQuiz = async (req, res, next) => {
 
 const deleteQuiz = async (req, res, next) => {
   try {
-    const checkIfOwner = await isOwner(req.params.quizId, req.user._id);
+    const checkIfOwner = await isOwner(req.params.quizId, req.user.id);
     if (checkIfOwner || accessLevelCheck(req.user.level, 'moderator')) {
       const result = await QuizModel.deleteQuizById(req.params.quizId);
       if (!result) {
@@ -87,23 +75,6 @@ const deleteQuiz = async (req, res, next) => {
     }
   } catch (error) {
     next(error instanceof AppError ? error : new AppError(error.message));
-  }
-};
-
-const isOwner = async (quizId, userId) => {
-  try {
-    const quiz = await QuizModel.getQuizById(quizId);
-    if (!quiz) {
-      throw new AppError('Quiz not found');
-    }
-    const ownerId = quiz.ownerId;
-    if (userId.toString() === ownerId.toString()) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    new AppError(error.message);
   }
 };
 
