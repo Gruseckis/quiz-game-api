@@ -25,6 +25,18 @@ const addQuiz = async (req, res, next) => {
   }
 };
 
+const getQuizById = async (req, res, next) => {
+  try {
+    const quiz = await QuizModel.getQuizById(req.params.quizId);
+    if (!quiz) {
+      throw new AppError('Quiz with such ID does not exists');
+    }
+    res.status(200).send({ payload: { quiz } });
+  } catch (error) {
+    next(new AppError(error.message));
+  }
+};
+
 const updateQuiz = async (req, res, next) => {
   try {
     const body = { ...req.body };
@@ -95,4 +107,4 @@ const isOwner = async (quizId, userId) => {
   }
 };
 
-export { getQuizzes, addQuiz, updateQuiz, deleteQuiz };
+export { getQuizzes, addQuiz, updateQuiz, deleteQuiz, getQuizById };
