@@ -78,21 +78,4 @@ const deleteQuiz = async (req, res, next) => {
   }
 };
 
-// const isOwner = async (quizId, userId) => {
-//   try {
-//     const quiz = await QuizModel.getQuizById(quizId);
-//     if (!quiz) {
-//       throw new AppError('Quiz not found');
-//     }
-//     const ownerId = quiz.ownerId;
-//     if (userId.toString() === ownerId.toString()) {
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   } catch (error) {
-//     return new AppError(error.message);
-//   }
-// };
-
 export { getQuizzes, addQuiz, updateQuiz, deleteQuiz, getQuizById };
