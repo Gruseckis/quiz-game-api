@@ -19,7 +19,7 @@ const addQuiz = async (req, res, next) => {
       name: req.body.name,
       description: req.body.description,
     });
-    res.status(200).send({ payload: { quiz } });
+    res.status(201).send({ payload: { quiz } });
   } catch (error) {
     next(new AppError(error.message));
   }
@@ -91,8 +91,8 @@ const isOwner = async (quizId, userId) => {
       return false;
     }
   } catch (error) {
-    new AppError(error.message);
+    return new AppError(error.message);
   }
 };
 
-export { getQuizzes, addQuiz, updateQuiz, deleteQuiz };
+export { getQuizzes, addQuiz, updateQuiz, deleteQuiz, isOwner };
