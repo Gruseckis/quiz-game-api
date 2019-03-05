@@ -11,8 +11,8 @@ describe('IndexController', () => {
       const res = { status: sinon.stub().returns(send) };
       const req = sinon.stub();
       indexController(req, res);
-      expect(res.status).to.be.calledWith(200);
-      expect(send.send).to.be.calledWith({ payload: { message: 'Quiz-game API' } });
+      expect(res.status).to.be.calledWith(404);
+      expect(send.send).to.be.calledWith({ payload: { message: 'Resource not found' } });
       expect(req).to.have.not.been.calledOnce;
     });
   });
