@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import * as QuizModel from '../../models/QuizModel';
+import * as QuestionModel from '../../models/questionModel';
 import { getQuizzes, addQuiz, updateQuiz, getQuizById, deleteQuiz } from '../../controllers/quizController';
 import AppError from '../../errors/AppError';
 import * as levelHelper from '../../helpers/accessLevelCheck';
@@ -218,15 +219,18 @@ describe('QuizController', () => {
         params: { quizId: 'Quiz id' },
         user: { id: 'id' },
       };
-      const deletedRecord = {};
+      const deletedRecord = { questions: ['id1', 'id2'] };
       const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(false);
       const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(true);
       const deleteQuizById = sinon.stub(QuizModel, 'deleteQuizById').resolves(deletedRecord);
+      const deleteQuestions = sinon.stub(QuestionModel, 'deleteQuestionsFromIdArray').resolves();
       await deleteQuiz(req, res, next);
       expect(isOwnerCheck).to.be.calledOnce;
       expect(levelChecker).to.be.not.calledOnce;
       expect(deleteQuizById).to.be.calledOnce;
       expect(deleteQuizById).to.be.calledWith(req.params.quizId);
+      expect(deleteQuestions).to.be.calledOnce;
+      expect(deleteQuestions).to.be.calledWith(deletedRecord.questions);
       expect(next).to.be.not.calledOnce;
       expect(res.status).to.be.calledWith(200);
       expect(resSend.send).to.be.calledWith({ payload: { message: 'Successfully deleted quiz' } });
@@ -240,6 +244,7 @@ describe('QuizController', () => {
       const levelChecker = sinon.stub(levelHelper, 'accessLevelCheck').returns(true);
       const isOwnerCheck = sinon.stub(levelHelper, 'isOwner').resolves(false);
       const deleteQuizById = sinon.stub(QuizModel, 'deleteQuizById').resolves(deletedRecord);
+      sinon.stub(QuestionModel, 'deleteQuestionsFromIdArray').resolves();
       await deleteQuiz(req, res, next);
       expect(isOwnerCheck).to.be.calledOnce;
       expect(levelChecker).to.be.calledOnce;
