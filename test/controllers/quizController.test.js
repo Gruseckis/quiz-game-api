@@ -41,6 +41,7 @@ describe('QuizController', () => {
       const req = {
         user: {
           id: 'userId',
+          level: 'quizer',
         },
         body: {
           name: 'Quiz name',
@@ -60,9 +61,19 @@ describe('QuizController', () => {
       expect(res.status).to.be.calledWith(201);
       expect(resSend.send).to.be.calledWith({ payload: { quiz } });
     });
+    it('unsuccessfull request, incorrect level', async () => {
+      const req = { user: { id: '', level: 'user' }, body: { name: '', description: '' } };
+      const saveQuiz = sinon.stub(QuizModel, 'save');
+      await addQuiz(req, res, next);
+      expect(saveQuiz).to.be.not.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+      expect(next.args[0][0].status).to.be.equal(500);
+    });
     it('unsuccessfull request, database error', async () => {
       const saveQuiz = sinon.stub(QuizModel, 'save').rejects();
-      const req = { user: { id: '' }, body: { name: '', description: '' } };
+      const req = { user: { id: '', level: 'quizer' }, body: { name: '', description: '' } };
       await addQuiz(req, res, next);
       expect(saveQuiz).to.be.calledOnce;
       expect(res.status).to.be.not.calledOnce;
