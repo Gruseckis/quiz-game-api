@@ -28,6 +28,9 @@ const updateQuestionById = async (_id, update) => QuestionModel.findByIdAndUpdat
 // delete question by provided ID(only quis owner or admin can delete questions)
 const deleteQuestionById = async _id => QuestionModel.findByIdAndDelete(_id);
 
+// delete multiple reccords from array list
+const deleteQuestionsFromIdArray = async questionIdArray => QuestionModel.deleteMany({ _id: { $in: questionIdArray } });
+
 export {
   QuestionModel,
   questionSchema,
@@ -37,4 +40,5 @@ export {
   updateQuestionById,
   deleteQuestionById,
   getQuestionByQuestionName,
+  deleteQuestionsFromIdArray,
 };
