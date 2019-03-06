@@ -1,4 +1,5 @@
 import * as QuizModel from '../models/QuizModel';
+import { deleteQuestionsFromIdArray } from '../models/questionModel';
 import AppError from '../errors/AppError';
 import { accessLevelCheck, isOwner } from '../helpers/accessLevelCheck';
 
@@ -73,6 +74,7 @@ const deleteQuiz = async (req, res, next) => {
       if (!result) {
         throw new AppError('Cannot delete quiz which does not exist');
       }
+      await deleteQuestionsFromIdArray(result.questions);
       res.status(200).send({ payload: { message: 'Successfully deleted quiz' } });
     } else {
       throw new AppError('Only owner, moderator or admin can delete the quiz');
