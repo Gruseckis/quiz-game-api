@@ -12,14 +12,18 @@ const getQuizzes = async (req, res, next) => {
 };
 
 const addQuiz = async (req, res, next) => {
-  const { user } = req;
   try {
-    const quiz = await QuizModel.save({
-      ownerId: user.id,
-      name: req.body.name,
-      description: req.body.description,
-    });
-    res.status(201).send({ payload: { quiz } });
+    const { user } = req;
+    if (accessLevelCheck(req.user.level, 'quizer')) {
+      const quiz = await QuizModel.save({
+        ownerId: user.id,
+        name: req.body.name,
+        description: req.body.description,
+      });
+      res.status(201).send({ payload: { quiz } });
+    } else {
+      throw new AppError('You need to be a quizer or higher level to be able to create quiz');
+    }
   } catch (error) {
     next(new AppError(error.message));
   }
