@@ -1,6 +1,6 @@
 import * as questionModel from '../models/questionModel';
 import AppError from '../errors/AppError';
-import { QuizModel, getQuizById } from '../models/QuizModel';
+import { getQuizById, addQuestionIntoQuiz } from '../models/QuizModel';
 
 const addNewQuestion = async (req, res, next) => {
   try {
@@ -12,7 +12,7 @@ const addNewQuestion = async (req, res, next) => {
         answers: req.body.answers,
         type: req.body.type,
       });
-      await QuizModel.findByIdAndUpdate(req.body.quizId, { $push: { questions: question.id } });
+      await addQuestionIntoQuiz(req.body.quizId, question.id);
       res.status(200).send({ payload: { question } });
       return;
     }
@@ -22,7 +22,7 @@ const addNewQuestion = async (req, res, next) => {
   }
 };
 
-const getALLquestions = async (req, res, next) => {
+const getAllQuestions = async (req, res, next) => {
   try {
     const questions = await questionModel.getAllQuestions();
     res.status(200).send({ payload: { questions } });
@@ -62,4 +62,4 @@ const deleteQuestionbyId = async (req, res, next) => {
   }
 };
 
-export { addNewQuestion, getALLquestions, getQuestionById, updateQuestionById, deleteQuestionbyId };
+export { addNewQuestion, getAllQuestions, getQuestionById, updateQuestionById, deleteQuestionbyId };

@@ -7,8 +7,8 @@ describe('QuestionRouter', () => {
   it('GET getaAllQuestion', () => {
     expect(questionRouter.stack).to.have.lengthOf(5);
     expect(questionRouter.stack[0].route.path).to.be.equal('');
-    expect(questionRouter.stack[0].route.stack[0].handle).to.be.equal(questionController.getALLquestions);
-    expect(questionRouter.stack[0].route.stack[0].name).to.be.equal('getALLquestions');
+    expect(questionRouter.stack[0].route.stack[0].handle).to.be.equal(questionController.getAllQuestions);
+    expect(questionRouter.stack[0].route.stack[0].name).to.be.equal('getAllQuestions');
     expect(questionRouter.stack[0].route.stack[0].method).to.be.equal('get');
   });
   it('POST addNewQuestion', () => {
