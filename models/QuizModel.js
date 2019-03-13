@@ -30,6 +30,9 @@ const updateQuizById = async (id, model) => QuizModel.findByIdAndUpdate(id, mode
 
 const deleteQuizById = async id => QuizModel.findByIdAndDelete(id);
 
+const addQuestionIntoQuiz = async (id, questionId) =>
+  QuizModel.findByIdAndUpdate(id, { $push: { questions: questionId } });
+
 export {
   QuizModel,
   quizSchema,
@@ -40,6 +43,7 @@ export {
   updateQuizById,
   deleteQuizById,
   getQuizByQuestionId,
+  addQuestionIntoQuiz,
 };
 
 QuizModel.schema
