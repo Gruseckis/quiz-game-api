@@ -12,6 +12,9 @@ const getAllResults = async (req, res, next) => {
 
 const getResultById = async (req, res, next) => {
   try {
+    if (!req.params.resultId) {
+      throw new AppError('resultId required.');
+    }
     const resultById = await ResultModel.getResultById(req.params.resultId);
     res.status(200).send({ payload: { result: resultById } });
   } catch (error) {
