@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 
-const resultSchema = new mongoose.Schema({
+const resultSchema = new mongoose.Schema(
+  {
     recordIds: [{ type: String, unique: true, required: true }],
     userId: { type: String, unique: false, required: true },
     quizId: { type: String, unique: false, required: true },
-},
-    { timestamps: true },
+  },
+  { timestamps: true }
 );
 resultSchema.index({ userId: 1, quizId: 1 }, { unique: true });
-
 
 const ResultModel = mongoose.model('Result', resultSchema);
 
@@ -22,10 +22,21 @@ const getAllResultsByUserId = async userId => ResultModel.find(userId);
 
 const getAllresultsByQuizId = async quizId => ResultModel.find(quizId);
 
-const findByIdAndUpdate = async (id, model) => ResultModel.findByIdAndUpdate(id, model, { new: true });
+const findByIdAndUpdate = async ({ id, model }) => ResultModel.findByIdAndUpdate(id, model, { new: true });
 
 const deleteResultById = async _id => ResultModel.findByIdAndRemove(_id);
 
 const update = async _id => ResultModel.update(_id);
 
-export { save, getAllResults, getResultById, getAllResultsByUserId, getAllresultsByQuizId, deleteResultById, ResultModel, resultSchema, findByIdAndUpdate, update };
+export {
+  save,
+  getAllResults,
+  getResultById,
+  getAllResultsByUserId,
+  getAllresultsByQuizId,
+  deleteResultById,
+  ResultModel,
+  resultSchema,
+  findByIdAndUpdate,
+  update,
+};

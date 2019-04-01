@@ -1,6 +1,13 @@
 /* eslint-disable no-unused-expressions */
-import { getAllResults, getResultById, addResults } from '../../controllers/resultController';
+import {
+  getAllResults,
+  getResultById,
+  addResults,
+  deleteResultById,
+  updateResultById,
+} from '../../controllers/resultController';
 import * as ResultModel from '../../models/resultModel';
+import * as RecordModel from '../../models/recordsModel';
 import AppError from '../../errors/AppError';
 
 describe('ResultController', () => {
@@ -107,6 +114,122 @@ describe('ResultController', () => {
       expect(res.status).to.be.calledWith(200);
       expect(resSend.send).to.be.calledOnce;
       expect(resSend.send).to.be.calledWith({ payload: { result } });
+    });
+    it('unsuccessfull database error', async () => {
+      const req = {
+        body: {},
+        user: {},
+      };
+      const saveResult = sinon.stub(ResultModel, 'save').rejects();
+      await addResults(req, res, next);
+      expect(saveResult).to.be.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+      expect(next.args[0][0].status).to.be.equal(500);
+    });
+  });
+  describe('.deleteResultById(req, res, next)', () => {
+    it('successfully delete result', async () => {
+      const req = {
+        params: { resultId: 'resultId' },
+      };
+      const deletedResult = { recordIds: ['id1', 'id2'] };
+      const deleteResult = sinon.stub(ResultModel, 'deleteResultById').resolves(deletedResult);
+      const deleteRecords = sinon.stub(RecordModel, 'deleteRecordsFromIdArray').resolves();
+      await deleteResultById(req, res, next);
+      expect(next).to.be.not.calledOnce;
+      expect(deleteResult).to.be.calledOnce;
+      expect(deleteResult).to.be.calledWith(req.params.resultId);
+      expect(deleteRecords).to.be.calledOnce;
+      expect(deleteRecords).to.be.calledWith(deletedResult.recordIds);
+      expect(res.status).to.be.calledOnce;
+      expect(res.status).to.be.calledWith(200);
+      expect(resSend.send).to.be.calledOnce;
+      expect(resSend.send).to.be.calledWith({ payload: { message: 'Result is deleted' } });
+    });
+    it('unsuccessfull no result in DB', async () => {
+      const req = {
+        params: { resultId: 'resultId' },
+      };
+      const deletedResult = null;
+      const deleteResult = sinon.stub(ResultModel, 'deleteResultById').resolves(deletedResult);
+      const deleteRecords = sinon.stub(RecordModel, 'deleteRecordsFromIdArray').resolves();
+      await deleteResultById(req, res, next);
+      expect(deleteResult).to.be.calledOnce;
+      expect(deleteRecords).to.be.not.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+      expect(next.args[0][0].status).to.be.equal(500);
+    });
+    it('unsuccessfull database error', async () => {
+      const req = {
+        params: { resultId: 'resultId' },
+      };
+      const deleteResult = sinon.stub(ResultModel, 'deleteResultById').rejects();
+      const deleteRecords = sinon.stub(RecordModel, 'deleteRecordsFromIdArray').resolves();
+      await deleteResultById(req, res, next);
+      expect(deleteResult).to.be.calledOnce;
+      expect(deleteRecords).to.be.not.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+      expect(next.args[0][0].status).to.be.equal(500);
+    });
+  });
+  describe('.updateResultById(req, res, next)', () => {
+    it('successfully update result', async () => {
+      const req = {
+        params: {
+          resultId: 'resultId',
+        },
+        body: {
+          recordIds: ['id2', 'id3'],
+        },
+      };
+      const updatedResult = {};
+      const updateResult = sinon.stub(ResultModel, 'findByIdAndUpdate').resolves(updatedResult);
+      await updateResultById(req, res, next);
+      expect(next).to.be.not.calledOnce;
+      expect(updateResult).to.be.calledOnce;
+      expect(updateResult).to.be.calledWith({ id: req.params.resultId, model: { recordIds: req.body.recordIds } });
+      expect(res.status).to.be.calledWith(200);
+      expect(resSend.send).to.be.calledWith({ payload: { result: updatedResult } });
+    });
+    it('unsuccessfull nothing to update', async () => {
+      const req = {
+        params: {
+          resultId: 'resultId',
+        },
+        body: {
+          recordIds: [],
+        },
+      };
+      const updateResult = sinon.stub(ResultModel, 'findByIdAndUpdate').resolves();
+      await updateResultById(req, res, next);
+      expect(updateResult).to.be.not.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+      expect(next.args[0][0].status).to.be.equal(500);
+    });
+    it('unsuccessfull database error', async () => {
+      const req = {
+        params: {
+          resultId: 'resultId',
+        },
+        body: {
+          recordIds: ['id'],
+        },
+      };
+      const updateResult = sinon.stub(ResultModel, 'findByIdAndUpdate').rejects();
+      await updateResultById(req, res, next);
+      expect(updateResult).to.be.calledOnce;
+      expect(res.status).to.be.not.calledOnce;
+      expect(next).to.be.calledOnce;
+      expect(next.args[0][0]).to.be.instanceOf(AppError);
+      expect(next.args[0][0].status).to.be.equal(500);
     });
   });
 });
