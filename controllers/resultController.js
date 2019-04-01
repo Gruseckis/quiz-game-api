@@ -1,4 +1,5 @@
 import * as ResultModel from '../models/resultModel';
+import * as RecordModel from '../models/recordsModel';
 import AppError from '../errors/AppError';
 
 const getAllResults = async (req, res, next) => {
@@ -12,6 +13,9 @@ const getAllResults = async (req, res, next) => {
 
 const getResultById = async (req, res, next) => {
   try {
+    if (!req.params.resultId) {
+      throw new AppError('resultId required.');
+    }
     const resultById = await ResultModel.getResultById(req.params.resultId);
     res.status(200).send({ payload: { result: resultById } });
   } catch (error) {
@@ -52,8 +56,11 @@ const updateResultById = async (req, res, next) => {
     const id = req.params.resultId;
     const { recordIds } = req.body;
     let model = {};
-    recordIds ? (model.recordIds = recordIds) : null;
-    const updatedResults = await ResultModel.findByIdAndUpdate(id, model);
+    if (!recordIds || recordIds.length === 0) {
+      throw new AppError('Nothing to update');
+    }
+    model.recordIds = recordIds;
+    const updatedResults = await ResultModel.findByIdAndUpdate({ id, model });
     res.status(200).send({ payload: { result: updatedResults } });
   } catch (error) {
     next(new AppError(error.message));
